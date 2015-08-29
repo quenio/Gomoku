@@ -1,8 +1,9 @@
-#include <iostream>
-
-using namespace std;
+#include "game.h"
 
 int main() {
-    cout << "Hello, World!" << endl;
+    Game game {};
+
+    game.startWithPlayer(game.ai());
+
     return 0;
 }
