@@ -5,6 +5,17 @@
 #include "game_board.h"
 #include "debug.h"
 
+enum ScoreWeight
+{
+    WIN = 1000,
+    DRAW = 0
+};
+
+constexpr int score(const PlayerMarker & playerMarker, const ScoreWeight & scoreWeight)
+{
+    return (playerMarker == X ? +1 : -1) * scoreWeight;
+}
+
 class GameNode
 {
 public:
@@ -31,9 +42,41 @@ public:
 
     GamePlay play() const { return _gamePlay; }
 
-    int score() const { return _gameBoard.score(); }
+    int score() const
+    {
+        if (isGameOver())
+        {
+            return utilityScore();
+        }
+        else
+        {
+            return heuristicScore();
+        }
+    }
 
     bool isGameOver() const { return _gameBoard.isGameOver(); }
+
+    int utilityScore() const
+    {
+        if (_gameBoard.hasWinner())
+        {
+            return ::score(_gameBoard.winner(), WIN);
+        }
+        else if (_gameBoard.isDraw())
+        {
+            return DRAW;
+        }
+        else
+        {
+            throw runtime_error { "The utility score can only be calculated when the game board is terminal." };
+        }
+    }
+
+    int heuristicScore() const
+    {
+        // TODO Determine heuristic.
+        return 0;
+    }
 
     int level() const { return _level; }
 
@@ -85,8 +128,8 @@ public:
 
 private:
 
-    static constexpr int MAX_SCORE = +1000;
-    static constexpr int MIN_SCORE = -1000;
+    static constexpr int MAX_SCORE = score(X, WIN);
+    static constexpr int MIN_SCORE = score(O, WIN);
 
     int minMax(GameNode node, PlayerMarker playerMarker)
     {

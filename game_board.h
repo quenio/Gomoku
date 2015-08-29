@@ -113,62 +113,6 @@ public:
         return legalPlays;
     }
 
-    int score() const
-    {
-        if (isGameOver())
-        {
-            return utilityScore();
-        }
-        else
-        {
-            return heuristicScore();
-        }
-    }
-
-    int utilityScore() const
-    {
-        for (int line = 0; line < GameBoard::LINE_COUNT; line++) {
-            if (isLineMatch(line)) {
-                return utilityScoreOfSlot(line, 0);
-            }
-        }
-
-        for (int column = 0; column < GameBoard::COLUMN_COUNT; column++) {
-            if (isColumnMatch(column)) {
-                return utilityScoreOfSlot(0, column);
-            }
-        }
-
-        if (isDiagonalMatch()) {
-            return utilityScoreOfSlot(1, 1);
-        }
-
-        return 0;
-    }
-
-    int utilityScoreOfSlot(int line, int column) const
-    {
-        if (_slots[line][column].isEmpty())
-        {
-            throw runtime_error { "There is no utility score for empty slot." };
-        }
-
-        if (_slots[line][column].hasPlayerMarker(X))
-        {
-            return +1;
-        }
-        else
-        {
-            return -1;
-        }
-    }
-
-    int heuristicScore() const
-    {
-        // TODO Determine heuristic.
-        return 0;
-    }
-
     friend ostream & operator << (ostream &os, const GameBoard &gameBoard);
 
 private:
