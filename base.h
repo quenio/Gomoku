@@ -2,7 +2,7 @@
 
 #pragma once
 
-static bool DEBUG = false;
+static bool DEBUG = true;
 
 #include <vector>
 #include <iostream>

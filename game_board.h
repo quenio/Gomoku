@@ -9,8 +9,8 @@ class GameBoard
 {
 public:
 
-    static const int LINE_COUNT = 3;
-    static const int COLUMN_COUNT = 3;
+    static const int LINE_COUNT = 15;
+    static const int COLUMN_COUNT = 15;
 
     bool isGameOver() const
     {

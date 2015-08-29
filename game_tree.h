@@ -12,7 +12,8 @@ public:
     {
     }
 
-    GameNode(const GamePlay & gamePlay, const GameBoard & gameBoard): _gamePlay { gamePlay }, _gameBoard { gameBoard }
+    GameNode(const GamePlay & gamePlay, const GameBoard & gameBoard, int level):
+        _gamePlay { gamePlay }, _gameBoard { gameBoard }, _level { level }
     {
     }
 
@@ -22,7 +23,7 @@ public:
         for (const auto &newPlay : _gameBoard.allLegalPlays())
         {
             GameBoard newGameBoard { _gameBoard.play(newPlay, playerMarker) };
-            result.push_back(GameNode { newPlay, newGameBoard });
+            result.push_back(GameNode { newPlay, newGameBoard, _level + 1 });
         }
         return result;
     }
@@ -33,18 +34,21 @@ public:
 
     bool isGameOver() const { return _gameBoard.isGameOver(); }
 
+    int level() const { return _level; }
+
     friend ostream & operator << (ostream &os, const GameNode &gameNode);
 
 private:
 
     const GamePlay _gamePlay;
     const GameBoard _gameBoard;
+    const int _level = 0;
 
 };
 
 ostream & operator << (ostream &os, const GameNode &gameNode)
 {
-    os << gameNode._gameBoard << " " << gameNode._gamePlay;
+    os << gameNode._gameBoard << "Play: " << gameNode._gamePlay << " - Level: " << gameNode._level;
     return os;
 }
 
@@ -77,11 +81,23 @@ public:
 
 private:
 
-    static const int MAX_SCORE = +1000;
-    static const int MIN_SCORE = -1000;
+    static constexpr int MAX_SCORE = +1000;
+    static constexpr int MIN_SCORE = -1000;
+
+    static constexpr int MAX_DEPTH = 10;
 
     int minMax(GameNode node, PlayerMarker playerMarker)
     {
+        if (DEBUG)
+        {
+            if (node.level() > MAX_DEPTH)
+            {
+                throw runtime_error { "Game tree reached max depth." };
+            }
+
+            cout << "DEBUG: GameNode:" << endl << node << endl << endl;
+        }
+
         if (node.isGameOver())
         {
             return node.score();
