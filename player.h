@@ -33,20 +33,25 @@ bool operator == (Player & lhs, Player & rhs)
     return lhs._marker == rhs._marker;
 }
 
+enum PlayerSkill { Novice = 1, Medium = 2, Expert = 3 };
+
 class AIPlayer: public Player
 {
 public:
-    AIPlayer(): Player { "Exterminator",  X }
+    AIPlayer(const PlayerSkill & skill): Player { "Exterminator",  X }, _skill { skill }
     {
     }
 
     GameBoard play(GameBoard& gameBoard)
     {
-        GameTree gameTree(gameBoard);
+        GameTree gameTree { gameBoard, _skill };
         GamePlay bestPlay = gameTree.bestPlayFor(_marker);
         return gameBoard.play(bestPlay, _marker);
     }
 
+private:
+
+    const PlayerSkill _skill;
 };
 
 class HumanPlayer: public Player

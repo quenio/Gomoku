@@ -2,8 +2,6 @@
 
 #pragma once
 
-static bool DEBUG = true;
-
 #include <vector>
 #include <iostream>
 

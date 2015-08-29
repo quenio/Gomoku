@@ -3,6 +3,7 @@
 #pragma once
 
 #include "game_board.h"
+#include "debug.h"
 
 class GameNode
 {
@@ -55,7 +56,10 @@ ostream & operator << (ostream &os, const GameNode &gameNode)
 class GameTree {
 public:
 
-    GameTree(GameBoard currentBoard): _root { GameNode { currentBoard }  } {}
+    GameTree(const GameBoard & currentBoard, const int maxLevel):
+        _root { GameNode { currentBoard }  }, _maxLevel { maxLevel }
+    {
+    }
 
     GamePlay bestPlayFor(const PlayerMarker & playerMarker)
     {
@@ -70,7 +74,7 @@ public:
                 bestPlay = gameNode.play();
             }
 
-            if (DEBUG)
+            if (DEBUG<TopLevel>::enabled and not DEBUG<MidLevel>::enabled)
             {
                 cout << "DEBUG: Score: " << score << endl;
                 cout << "DEBUG: GameNode:" << endl << gameNode << endl << endl;
@@ -84,22 +88,20 @@ private:
     static constexpr int MAX_SCORE = +1000;
     static constexpr int MIN_SCORE = -1000;
 
-    static constexpr int MAX_DEPTH = 10;
-
     int minMax(GameNode node, PlayerMarker playerMarker)
     {
-        if (DEBUG)
+        if (DEBUG<MidLevel>::enabled)
         {
-            if (node.level() > MAX_DEPTH)
-            {
-                throw runtime_error { "Game tree reached max depth." };
-            }
-
             cout << "DEBUG: GameNode:" << endl << node << endl << endl;
         }
 
-        if (node.isGameOver())
+        if (node.level() == _maxLevel or node.isGameOver())
         {
+            if (DEBUG<BottomLevel>::enabled)
+            {
+                cout << "DEBUG: Score: " << node.score() << endl << endl;
+            }
+
             return node.score();
         }
 
@@ -144,5 +146,6 @@ private:
     }
 
     GameNode _root;
+    int _maxLevel;
 
 };

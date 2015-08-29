@@ -81,8 +81,8 @@ private:
         }
     }
 
-    shared_ptr<Player> _ai { new AIPlayer() };
-    shared_ptr<Player> _human { new HumanPlayer() };
+    shared_ptr<Player> _ai { new AIPlayer { Novice } };
+    shared_ptr<Player> _human { new HumanPlayer };
     shared_ptr<Player> _currentPlayer;
 
     GameBoard _initialBoard, _currentBoard;
