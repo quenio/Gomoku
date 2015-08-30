@@ -7,8 +7,9 @@
 
 enum ScoreWeight
 {
-    WIN = 1000,
-    DRAW = 0
+    WIN = 1000, // The game board has a victory.
+    CLEAR_FIELD = 10, // The 5x5 area of the game board inspected has all slots available.
+    DRAW = 0 // The game board has come to a draw.
 };
 
 constexpr int score(const PlayerMarker & playerMarker, const ScoreWeight & scoreWeight)
@@ -32,7 +33,7 @@ public:
     vector<GameNode> childrenFor(const PlayerMarker & playerMarker)
     {
         vector<GameNode> result;
-        for (const auto &newPlay : _gameBoard.allLegalPlays())
+        for (const auto &newPlay : _gameBoard.validPlays())
         {
             GameBoard newGameBoard { _gameBoard.play(newPlay, playerMarker) };
             result.push_back(GameNode { newPlay, newGameBoard, _level + 1 });
@@ -40,9 +41,9 @@ public:
         return result;
     }
 
-    GamePlay play() const { return _gamePlay; }
+    GamePlay gamePlay() const { return _gamePlay; }
 
-    int score() const
+    int scoreFor(PlayerMarker playerMarker) const
     {
         if (isGameOver())
         {
@@ -50,7 +51,7 @@ public:
         }
         else
         {
-            return heuristicScore();
+            return heuristicScore(playerMarker);
         }
     }
 
@@ -72,10 +73,32 @@ public:
         }
     }
 
-    int heuristicScore() const
+    int heuristicScore(const PlayerMarker & playerMarker) const
     {
-        // TODO Determine heuristic.
-        return 0;
+        if (DEBUG<HeuristicLevel>::enabled)
+        {
+            cout << "Heuristic Player Marker: " << playerMarker << endl;
+        }
+
+        return ::score(playerMarker, heuristicWeight());
+    }
+
+    ScoreWeight heuristicWeight() const
+    {
+        if (DEBUG<HeuristicLevel>::enabled)
+        {
+            cout << "Valid Play Count: " << int(_gameBoard.validPlays(CENTRAL_AREA).size()) << endl;
+            cout << "Slot Count: " << CENTRAL_AREA.slotCount() << endl << endl;
+        }
+
+        if (_gameBoard.isClearInAreaForPlay(CENTRAL_AREA, _gamePlay))
+        {
+            return CLEAR_FIELD;
+        }
+        else
+        {
+            return DRAW;
+        }
     }
 
     int level() const { return _level; }
@@ -99,8 +122,8 @@ ostream & operator << (ostream &os, const GameNode &gameNode)
 class GameTree {
 public:
 
-    GameTree(const GameBoard & currentBoard, const int maxLevel):
-        _root { GameNode { currentBoard }  }, _maxLevel { maxLevel }
+    GameTree(const GameBoard & currentBoard, const int deepestLevel):
+        _root { GameNode { currentBoard }  }, _deepestLevel { deepestLevel }
     {
     }
 
@@ -110,17 +133,20 @@ public:
         GamePlay bestPlay(-1, -1);
         for (const auto &gameNode : _root.childrenFor(playerMarker))
         {
-            int score = minMax(gameNode, adversaryOf(playerMarker));
+            int score = minMax(gameNode, playerMarker);
             if (score > maxScore)
             {
                 maxScore = score;
-                bestPlay = gameNode.play();
+                bestPlay = gameNode.gamePlay();
             }
 
             if (DEBUG<TopLevel>::enabled and not DEBUG<MidLevel>::enabled)
             {
-                cout << "DEBUG: Score: " << score << endl;
-                cout << "DEBUG: GameNode:" << endl << gameNode << endl << endl;
+                if (score != 0)
+                {
+                    cout << "DEBUG: Score: " << score << endl;
+                    cout << "DEBUG: GameNode:" << endl << gameNode << endl << endl;
+                }
             }
         }
         return bestPlay;
@@ -138,25 +164,28 @@ private:
             cout << "DEBUG: GameNode:" << endl << node << endl << endl;
         }
 
-        if (node.level() == _maxLevel or node.isGameOver())
+        if (node.level() == _deepestLevel or node.isGameOver())
         {
+            const int score = node.scoreFor(playerMarker);
+
             if (DEBUG<BottomLevel>::enabled)
             {
-                cout << "DEBUG: Score: " << node.score() << endl << endl;
+                cout << "DEBUG: Score: " << score << endl << endl;
             }
 
-            return node.score();
+            return score;
         }
 
-        const vector<GameNode> children = node.childrenFor(playerMarker);
+        const PlayerMarker adversary = adversaryOf(playerMarker);
+        const vector<GameNode> children = node.childrenFor(adversary);
 
         if (maxTurn(playerMarker))
         {
-            return max(children, adversaryOf(playerMarker));
+            return max(children, adversaryOf(adversary));
         }
         else
         {
-            return min(children, adversaryOf(playerMarker));
+            return min(children, adversaryOf(adversary));
         }
     }
 
@@ -189,6 +218,6 @@ private:
     }
 
     GameNode _root;
-    int _maxLevel;
+    int _deepestLevel;
 
 };

@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include "game_area.h"
+
 class GamePlay
 {
 public:
@@ -12,6 +14,12 @@ public:
 
     int line() const { return _line; }
     int column() const { return _column; }
+
+    bool in(const GameArea & area) const
+    {
+        return _line >= area.startLine() and _line <= area.endLine() and
+               _column >= area.startColumn() and _column <= area.endLine();
+    }
 
     friend ostream & operator << (ostream &os, const GamePlay &gamePlay);
 

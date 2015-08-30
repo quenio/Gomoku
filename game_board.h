@@ -9,23 +9,20 @@ class GameBoard
 {
 public:
 
-    static const int LINE_COUNT = 15;
-    static const int COLUMN_COUNT = 15;
-
     bool isGameOver() const
     {
-        return hasWinner() or allLegalPlays().size() == 0;
+        return hasWinner() or validPlays().size() == 0;
     }
 
     bool hasWinner() const
     {
-        for (int line = 0; line < GameBoard::LINE_COUNT; line++) {
+        for (int line = 0; line < LINE_COUNT; line++) {
             if (isLineMatch(line)) {
                 return true;
             }
         }
 
-        for (int column = 0; column < GameBoard::COLUMN_COUNT; column++) {
+        for (int column = 0; column < COLUMN_COUNT; column++) {
             if (isColumnMatch(column)) {
                 return true;
             }
@@ -46,13 +43,13 @@ public:
 
     PlayerMarker winner() const
     {
-        for (int line = 0; line < GameBoard::LINE_COUNT; line++) {
+        for (int line = 0; line < LINE_COUNT; line++) {
             if (isLineMatch(line)) {
                 return _slots[line][0].playerMarker();
             }
         }
 
-        for (int column = 0; column < GameBoard::COLUMN_COUNT; column++) {
+        for (int column = 0; column < COLUMN_COUNT; column++) {
             if (isColumnMatch(column)) {
                 return _slots[0][column].playerMarker();
             }
@@ -97,12 +94,12 @@ public:
         return newGameBoard;
     }
 
-    vector<GamePlay> allLegalPlays() const
+    vector<GamePlay> validPlays(const GameArea & area = FULL_BOARD) const
     {
         vector<GamePlay> legalPlays;
 
-        for (int line = 0; line < GameBoard::LINE_COUNT; line++) {
-            for (int column = 0; column < GameBoard::COLUMN_COUNT; column++) {
+        for (int line = area.startLine(); line <= area.endLine(); line++) {
+            for (int column = area.startColumn(); column <= area.endColumn(); column++) {
                 if (_slots[line][column].isEmpty())
                 {
                     legalPlays.push_back(GamePlay(line, column));
@@ -111,6 +108,11 @@ public:
         }
 
         return legalPlays;
+    }
+
+    bool isClearInAreaForPlay(const GameArea & area, const GamePlay & gamePlay) const
+    {
+        return gamePlay.in(area) and int(validPlays(area).size()) == (area.slotCount() - 1);
     }
 
     friend ostream & operator << (ostream &os, const GameBoard &gameBoard);
@@ -123,9 +125,9 @@ private:
 
 ostream & operator << (ostream &os, const GameBoard &gameBoard)
 {
-    for (int line = 0; line < GameBoard::LINE_COUNT; line++)
+    for (int line = 0; line < LINE_COUNT; line++)
     {
-        for (int column = 0; column < GameBoard::COLUMN_COUNT; column++)
+        for (int column = 0; column < COLUMN_COUNT; column++)
         {
             os << gameBoard._slots[line][column] << " ";
         }
