@@ -82,13 +82,13 @@ enum PlayerMaker
   X, // Computer
   O // Human
 }
-enum Direction { Horizontal, Vertical, Descending, Ascending };
+enum Direction { North, Northeast, East, Southeast, South, Southwest, West, Northwest };
 
 int score(GameNode node)
 {
   int max = MIN_INT;
   int extra = 0;
-  for (Direction direction = Horizontal; direction <= Ascending; direction++)
+  for (Direction direction = North; direction <= Northwest; direction++)
   {
     int score = score(node, direction, PlayerMaker::X);
     if (score == max)
@@ -127,20 +127,21 @@ int score(GameNode node, Direction direction, PlayerMaker marker)
   Slot current = node.slot;  
   while (current != nullptr && interval < 5)
   {
+    previous = current
     current = neighbor(current, direction, step);
-    if (current == nullptr)
+    if (current == nullptr || current.marker != marker) // bloqueado
     {
-      if (step > 0)
+      if (step == 1)
       {
-        step = -1; // Chegou-se ao final do tabuleiro; segue no sentido oposto da direção.
+        // Já bloqueado na posição de jogada. Nada para buscar nesta direção.
+        current = nullptr;
+      }
+      else if (step > 1)
+      {
+        step = -1; // Chegou-se ao final da linha; segue na direção oposta.
+        current = node.slot
       }
       score--; // Uma linha bloqueada deve valer menos que uma linha livre.
-    }
-    else if (current.empty)
-    {
-        score += 50; // Meia-pontuação pois esta casa é apenas uma possibilidade.
-        step++; // Segue adiante no mesmo sentido da direção.
-        interval++;
     }
     else if (current.marker == marker)
     {
@@ -148,10 +149,15 @@ int score(GameNode node, Direction direction, PlayerMaker marker)
       step++; // Segue adiante no mesmo sentido da direção.
       interval++;
     }
-    else
+    else // if (current.empty)
     {
-      step = -1; // Inverte o sentido pois não há mais possibilidades neste sentido.
-      score--; // Uma linha bloqueada deve valer menos que uma linha livre.
+        score += 50; // Meia-pontuação pois esta casa é apenas uma possibilidade.
+        step++; // Segue adiante no mesmo sentido da direção.
+        interval++;
+    }
+    if (previous != node.slot && previous.marker != current.marker)
+    {
+      score++; // Tracejados tem pontos mais altos porque eles podem confundir o adversário.
     }
   }
 
@@ -170,15 +176,18 @@ O algoritmo acima está basicamente fazendo o seguinte:
 1. Cada casa adjacente é percorrida em ambos os sentidos até se alcançar um intervalo de 5 casas.
 2. Para cada casa vazia, somasse 50 à pontuação inicial.
 3. Para cada casa marcada com o marcador de jogada passado como paramêtro, somasse 100 à pontuação.
-4. Casa marcada com o marcador do adversário (ou se chegou no final do tabuleiro) faz a busca seguir no sentido contrário e perdesse um ponto por ser uma linha bloqueada em uma das pontas.
+4. Casa marcada com o marcador do adversário (ou se chegou no final do tabuleiro) faz a busca seguir no sentido contrário e perdesse um ponto por ser uma linha bloqueada em uma das pontas. Se uma direção for bloqueada já na casa da jogada, então o sentido contrário nem é percorrido, porque já vai ser coberto pela pontuação da direção oposta.
+5. Ganhasse um ponto caso a linha seja tracejada. Esta deve valer mais que uma linha contínua porque ela pode confundir o adversário fazendo não perceber que se está perto de fechar uma linha.
 
-Observe que este algoritmo percorre todas as direções e somente escolhe a pontuação maior de todas as direções, ao invés de somar o valor de todas as direções. Isto é porque este algoritmo tenta de certa forma simular o que aconteceria caso a árvore de busca fosse percorrida pelo algoritmo min-max, onde também se escolhe a pontuação máxima dos nós-filho. Pode-se dizer que este algoritmo é uma localização da busca min-max sem precisar percorrer a árvore de estados do tabuleiro.
+Observe que este algoritmo percorre todas as direções e somente escolhe a pontuação maior, ao invés de somar o valor de cada direção. Isto é porque este algoritmo tenta de certa forma simular o que aconteceria caso a árvore de busca fosse percorrida pelo algoritmo min-max, onde também se escolhe a pontuação máxima dos nós-filho. Pode-se dizer que este algoritmo é uma localização da busca min-max sem precisar percorrer a árvore de estados do tabuleiro.
 
 ## Análise da Efetividade da Função de Pontuação
 
 Dado o algoritmo acima, vamos analisar como ele se comporta diante de alguns cenários do jogo Gomoku abordados pelas heurísticas definidas anteriormente.
 
 ### Campo Limpo
+
+
 
 ### Pontas Livres
 
