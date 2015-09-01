@@ -33,7 +33,7 @@ bool operator == (Player & lhs, Player & rhs)
     return lhs._marker == rhs._marker;
 }
 
-enum PlayerSkill { Novice = 1, Medium = 2, Expert = 3 };
+enum PlayerSkill { Novice = 1, Medium = 2, Expert = 3, Master = 2000 };
 
 class AIPlayer: public Player
 {

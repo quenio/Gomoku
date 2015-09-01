@@ -9,6 +9,8 @@ class GameBoard
 {
 public:
 
+    static const int WINNING_COUNT = 5;
+
     bool isGameOver() const
     {
         return hasWinner() or validPlays().size() == 0;
@@ -16,23 +18,9 @@ public:
 
     bool hasWinner() const
     {
-        for (int line = 0; line < LINE_COUNT; line++) {
-            if (isLineMatch(line)) {
-                return true;
-            }
-        }
+        PlayerMarker playerMarker;
 
-        for (int column = 0; column < COLUMN_COUNT; column++) {
-            if (isColumnMatch(column)) {
-                return true;
-            }
-        }
-
-        if (isDiagonalMatch()) {
-            return true;
-        }
-
-        return false;
+        return lineVictory(playerMarker) or columnVictory(playerMarker);
     }
 
     bool isDraw() const
@@ -40,43 +28,53 @@ public:
         return isGameOver() and not hasWinner();
     }
 
-
     PlayerMarker winner() const
     {
-        for (int line = 0; line < LINE_COUNT; line++) {
-            if (isLineMatch(line)) {
-                return _slots[line][0].playerMarker();
-            }
-        }
+        PlayerMarker playerMarker;
 
-        for (int column = 0; column < COLUMN_COUNT; column++) {
-            if (isColumnMatch(column)) {
-                return _slots[0][column].playerMarker();
-            }
-        }
-
-        if (isDiagonalMatch()) {
-            return _slots[1][1].playerMarker();
-        }
+        if (lineVictory(playerMarker)) return playerMarker;
+        if (columnVictory(playerMarker)) return playerMarker;
 
         throw runtime_error { "Game has no winner yet." };
     }
 
-    // TODO Change implementation from TicTacToe to check Gomoku's 5-slot lines
-    bool isLineMatch(int line) const {
-        return (_slots[line][0] == _slots[line][1]) and (_slots[line][1] == _slots[line][2]);
+    bool lineVictory(PlayerMarker & playerMarker) const
+    {
+        for (int line = 0; line < LINE_COUNT; line++)
+        {
+            int count = 1;
+            for (int column = 0; column < COLUMN_COUNT - 1; column++)
+            {
+                count = (_slots[line][column] == _slots[line][column + 1] ? count + 1 : 0);
+                if (count == WINNING_COUNT)
+                {
+                    playerMarker = _slots[line][column]._playerMarker;
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
-    // TODO Change implementation from TicTacToe to check Gomoku's 5-slot lines
-    bool isColumnMatch(int column) const {
-        return (_slots[0][column] == _slots[1][column]) and (_slots[1][column] == _slots[2][column]);
+    bool columnVictory(PlayerMarker & playerMarker) const
+    {
+        for (int column = 0; column < COLUMN_COUNT; column++)
+        {
+            int count = 0;
+            for (int line = 0; line < LINE_COUNT - 1; line++)
+            {
+                count = (_slots[line][column] == _slots[line + 1][column] ? count + 1 : 0);
+                if (count == WINNING_COUNT)
+                {
+                    playerMarker = _slots[line][column]._playerMarker;
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
-    // TODO Change implementation from TicTacToe to check Gomoku's 5-slot lines
-    bool isDiagonalMatch() const {
-        return ((_slots[0][0] == _slots[1][1]) and (_slots[1][1] == _slots[2][2])) or
-               ((_slots[2][0] == _slots[1][1]) and (_slots[1][1] == _slots[0][2]));
-    }
+    // TODO Implement diagonalVictory()
 
     GameBoard play(GamePlay newPlay, const PlayerMarker &playerMarker) const
     {

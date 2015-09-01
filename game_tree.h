@@ -182,13 +182,13 @@ private:
         const PlayerMarker adversary = adversaryOf(playerMarker);
         const vector<GameNode> children = node.childrenFor(adversary);
 
-        if (maxTurn(playerMarker))
+        if (maxTurn(adversary))
         {
-            return max(children, adversaryOf(adversary));
+            return max(children, adversary);
         }
         else
         {
-            return min(children, adversaryOf(adversary));
+            return min(children, adversary);
         }
     }
 

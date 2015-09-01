@@ -20,7 +20,7 @@ template <> struct DEBUG<TopLevel>
 
 template <> struct DEBUG<MidLevel>
 {
-    static const bool enabled = false;
+    static const bool enabled = true;
 };
 
 template <> struct DEBUG<BottomLevel>
