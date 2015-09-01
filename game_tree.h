@@ -43,6 +43,7 @@ public:
 
     GamePlay gamePlay() const { return _gamePlay; }
 
+    // TODO Modify in part 2 to implement envisioned algorithm that takes into account the heuristics.
     int scoreFor(PlayerMarker playerMarker) const
     {
         if (isGameOver())
@@ -73,6 +74,7 @@ public:
         }
     }
 
+    // Naive, initial implementation of heuristics.
     int heuristicScore(const PlayerMarker & playerMarker) const
     {
         if (DEBUG<HeuristicLevel>::enabled)
@@ -157,6 +159,7 @@ private:
     static constexpr int MAX_SCORE = score(X, WIN);
     static constexpr int MIN_SCORE = score(O, WIN);
 
+    // TODO Basic implementation of min-max - part 2 will implement alpha/beta
     int minMax(GameNode node, PlayerMarker playerMarker)
     {
         if (DEBUG<MidLevel>::enabled)

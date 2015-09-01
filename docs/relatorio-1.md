@@ -67,9 +67,9 @@ Além disso, esta pontuação precisa priorizar as heuristícas de acordo com ca
 
 ## A Pontuação Baseada em Heurísticas
 
-Primeiramente, vamos definir o algoritmo da função utilidade que leva em consideração as heurísticas expressas na seção anterior. Posteriormente, vamos avaliá-lo de acordo com cada heurística.
+Nesta seção, definiremos a função utilidade baseada em heurísticas que implementaremos na segunda parte do trabalho. Primeiramente, vamos definir o algoritmo. Posteriormente, vamos avaliá-lo de acordo com cada heurística.
 
-Informalmente, o algoritmo pode ser descrito de forma bem resumida nos dois passos a seguir:
+Informalmente, o algoritmo pode ser descrito de forma bem resumida nos três passos a seguir:
 1. Para cada direção do tabuleiro, haverá uma pontuação associada à casa onde será feita potentialmente a próxima jogada. Esta pontuação é calculada usando o estado das casas adjacentes naquela direção do tabuleiro, considerando se a casa da próxima jogada seja sua ou do adversário.
 2. O valor calculado para cada tupla (direção, jogador) é então comparado aos demais. O maior valor é considerado a pontuação associada ao estado do tabuleiro quando aquela jogada é efetuada pelo jogador.
 3. Se houver mais de um valor máximo retornado em direções diferentes, se adiciona "1" a pontuação para cada valor máximo adicional.
@@ -116,7 +116,7 @@ int score(GameNode node)
 }
 ```
 
-O cálculo da pontuação de cada direção do tabuleiro descrita no passo 1 acima pode ser descrita de forma abstrata em "C":
+O cálculo da pontuação de cada direção do tabuleiro descrita no passo 1 acima pode ser descrito em "C":
 
 ```C++
 int score(GameNode node, Direction direction, PlayerMaker marker)
@@ -173,9 +173,9 @@ int score(GameNode node, Direction direction, PlayerMaker marker)
 ```
 
 O algoritmo acima está basicamente fazendo o seguinte:
-1. Cada casa adjacente é percorrida em ambos os sentidos até se alcançar um intervalo de 5 casas.
-2. Para cada casa vazia, somasse 50 à pontuação inicial.
-3. Para cada casa marcada com o marcador de jogada passado como paramêtro, somasse 100 à pontuação.
+1. Cada casa adjacente é percorrida numa direção até se alcançar um intervalo de 5 casas.
+2. Para cada casa vazia, somasse 50 à pontuação inicial, pois se trata de uma marca em potencial para o jogador, mas pode não ser concretizada.
+3. Para cada casa marcada com o marcador de jogada passado como paramêtro, somasse 100 à pontuação, pois o jogador já garantiu esta casa para a formação de sua linha.
 4. Casa marcada com o marcador do adversário (ou se chegou no final do tabuleiro) faz a busca seguir no sentido contrário e perdesse um ponto por ser uma linha bloqueada em uma das pontas. Se uma direção for bloqueada já na casa da jogada, então o sentido contrário nem é percorrido, porque já vai ser coberto pela pontuação da direção oposta.
 5. Ganhasse um ponto caso a linha seja tracejada. Esta deve valer mais que uma linha contínua porque ela pode confundir o adversário fazendo não perceber que se está perto de fechar uma linha.
 
@@ -187,17 +187,33 @@ Dado o algoritmo acima, vamos analisar como ele se comporta diante de alguns cen
 
 ### Campo Limpo
 
-
+Num cenário de começo de jogo quando o campo está limpo, uma casa no centro do tabuleiro vai atingir uma pontuação mais alta que uma casa nas bordas do tabuleiro, pois uma casa do centro pode pontuar em todas as direções.
 
 ### Pontas Livres
 
-### Tringulação
+Uma casa que forma uma linha com pontas livres irá pontuar mais que uma casa que possui bloqueio em algumas das pontas, porque a última será penalidade com a diminuição da pontuação quando um bloqueio for encontrado.
+
+### Triangulação
+
+Uma casa que faz parte de várias linhas em direções diferentes vai pontuar mais alto que uma casa participando de apenas uma linha, porque para cada valor máximo repetido numa direção geração pontuação de "gratificação" para aquela casa.
 
 ### Tracejando
 
+Linhas com alternância de marcador e casas vazias são gratificas e pontuam mais que uma linha com o mesmo número de marcadores em sequência.
+
 ### Sentinela
 
+O cenário em que o adversário estas prestes a completar uma linha de quatro casas com duas pontas livres é coberto por aspectos do algoritmo descritos abaixo:
+- Primeiramente, a pontuação das jogadas simuladas com o adversário jogando na mesma posição são comparadas na função de utilidade da mesma forma que uma jogada do computador. Desta forma, se a jogada do adversário se torna mais vantajosa a este do que outra jogada do computador, então o computador jogará na casa que traria vantagem ao adversário para lhe impedir de fazê-la.
+- Além disso, como descrito na seção Pontas Livres, as jogadas que forem bloqueadas em uma das pontas serão penalizadas, portanto a jogada do adversário que tem pontas livres terá pontuação maior que qualquer outra jogada do computador que tenha bloqueios. Assim o computador vai acabar jogando na posição queria traria pontas livres para o adversário.
+
 ### Bloqueio Amplo
+
+Assim como foi descrito na Triangulação, cada valor máximo repetido em uma casa é gratificado, mesmo quando calculando um cenário de jogada do adversário. Assim, uma posição de múltiplos bloqueios terá precedência sobre uma posição onde o computador fazendo um único bloqueio.
+
+### Combinação de Cenários
+
+Na segunda parte do trabalho, a intenção é fazer também uma análise da combinação de diferentes cenários (por exemplo, Bloqueio Amplo vs Pontas Livres) e verificar se o algoritmo ainda continua fazendo as melhores escolhas.
 
 ## Otimizações
 
@@ -207,8 +223,12 @@ Visto que a busca do min-max é proibitiva num tabuleiro 15x15, devido ao tamanh
 
 O algoritmo min-max que mantém valores de alpha e beta para cada nó permite que ramos inteiros da árvore de busca possam ser ignorados, pois estes não poderiam em tese trazer resultados melhores do que já se alcançou com os ramos já pesquisados.
 
+Na parte 2 do trabalho, a intenção é modificar a implementação inicial do algoritmo min-max, introduzindo podas, e verificar se foi o suficiente para aumentar a profundidade da busca.
+
 ### Foco em Áreas do Tabuleiro
 
-Uma abordagem seria limitar a busca a uma área menor do tabuleiro. Se o jogo num determinado momento se concentra na área central do tabuleiro, por exemplo, então a busca poderia criar uma área central menor (vamos dizer, de 8x8) e então fazer a busca somente nos estados gerados dentro desta área.
+Outra abordagem que tentaremos na segunda parte do trabalho é limitar a busca a uma área menor do tabuleiro. Se o jogo num determinado momento se concentra na área central do tabuleiro, por exemplo, então a busca poderia criar uma área central menor (vamos dizer, de 8x8) e então fazer a busca somente nos estados gerados dentro desta área.
 
 No início do jogo, quando ainda existem poucas áreas marcadas, esta abordagem poder ser muito efetiva. Porém, a medida que o adversário começa a marcar áreas novas do tabuleiro, é necessário avaliá-las. Talvez seja possível manter várias áreas de busca separadas, dependendo da distância entre elas.
+
+----------

@@ -62,14 +62,17 @@ public:
         throw runtime_error { "Game has no winner yet." };
     }
 
+    // TODO Change implementation from TicTacToe to check Gomoku's 5-slot lines
     bool isLineMatch(int line) const {
         return (_slots[line][0] == _slots[line][1]) and (_slots[line][1] == _slots[line][2]);
     }
 
+    // TODO Change implementation from TicTacToe to check Gomoku's 5-slot lines
     bool isColumnMatch(int column) const {
         return (_slots[0][column] == _slots[1][column]) and (_slots[1][column] == _slots[2][column]);
     }
 
+    // TODO Change implementation from TicTacToe to check Gomoku's 5-slot lines
     bool isDiagonalMatch() const {
         return ((_slots[0][0] == _slots[1][1]) and (_slots[1][1] == _slots[2][2])) or
                ((_slots[2][0] == _slots[1][1]) and (_slots[1][1] == _slots[0][2]));
