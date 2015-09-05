@@ -4,19 +4,7 @@
 
 #include "game_board.h"
 #include "debug.h"
-
-enum Score
-{
-    DRAW = 0, // The game board has come to a draw.
-    EMPTY_POSITION = 50, // An empty position is just a possibility.
-    SINGLE_MARK = 100, // A single mark on the game board.
-    WIN = 500, // The game board has a victory.
-};
-
-constexpr int score(const PlayerMarker & playerMarker, const int & score)
-{
-    return (playerMarker == X ? +1 : -1) * score;
-}
+#include "score.h"
 
 class GameNode
 {
@@ -46,7 +34,7 @@ public:
 
     bool isGameOver() const { return _gameBoard.isGameOver(); }
 
-    int scoreFor(PlayerMarker playerMarker) const
+    Score scoreFor(PlayerMarker playerMarker) const
     {
         if (isGameOver())
         {
@@ -54,15 +42,15 @@ public:
         }
         else
         {
-            return ::score(playerMarker, heuristicScore());
+            return scoreOf(playerMarker, heuristicScore());
         }
     }
 
-    int utilityScore() const
+    Score utilityScore() const
     {
         if (_gameBoard.hasWinner())
         {
-            return ::score(_gameBoard.winner(), WIN);
+            return scoreOf(_gameBoard.winner(), WIN);
         }
         else if (_gameBoard.isDraw())
         {
@@ -74,54 +62,49 @@ public:
         }
     }
 
-    int heuristicScore() const
+    Score heuristicScore() const
     {
         if (DEBUG<HeuristicLevel>::enabled)
         {
-            cout << "Heuristic of " << _playedPosition << endl << endl;
+            cout << "Heuristic of " << _playedPosition << endl;
         }
 
-        int max = 0;
-        int extra = 0;
-
+        Score score = DRAW;
         for (int direction = North; direction <= Northwest; direction++)
         {
             for (int playerMarker = X; playerMarker <= O; playerMarker++)
             {
-                int score = directionScore(Direction(direction), PlayerMarker(playerMarker));
-
-                if (score == max)
-                {
-                    extra++;
-                }
-                else if (score > max)
-                {
-                    max = score;
-                    extra = 0;
-                }
+                score += directionScore(Direction(direction), PlayerMarker(playerMarker));
             }
         }
 
-        return max + extra;
+        if (DEBUG<HeuristicLevel>::enabled)
+        {
+            cout << "Heuristic Score: " << score << endl << endl;
+        }
+
+        return score;
     }
 
-    int directionScore(const Direction & direction, const PlayerMarker & marker) const
+    Score directionScore(const Direction & direction, const PlayerMarker & marker) const
     {
-        int score = Score::SINGLE_MARK; // Considers the node's played position as marked by the param marker.
         int step = 1;
-        int interval = 1;
+        int seqCount = 1;
 
-        if (DEBUG<HeuristicLevel>::enabled)
+        // Positions will score higher closer to the center.
+        Score score = scoreOf(SINGLE_MARK - _playedPosition.distanceTo(CENTER), seqCount);
+
+        if (DEBUG<HeuristicDetailedLevel>::enabled)
         {
             cout << "Direction: " << direction << " - " << marker << endl;
         }
 
         GamePosition previous, current = _playedPosition;
-        while (current.valid() and interval < WINNING_COUNT)
+        while (current.valid() and seqCount < WINNING_COUNT)
         {
-            if (step > 5)
+            if (step >= WINNING_COUNT)
             {
-                if (DEBUG<HeuristicLevel>::enabled)
+                if (DEBUG<HeuristicDetailedLevel>::enabled)
                 {
                     cout << "Step: " << step << endl;
                 }
@@ -144,18 +127,21 @@ public:
 
             if (_gameBoard.emptyIn(current))
             {
-                score += Score::EMPTY_POSITION; // half-score; since this position is just a possibility at this point.
                 step = step > 0 ? step + 1 : step - 1; // Proceed on the same direction.
-                interval++;
+                score += scoreOf(EMPTY_POSITION, abs(step)); // half-score; since this position is just a possibility at this point.
+                seqCount++;
             }
             else if (_gameBoard.markedIn(current, marker))
             {
-                score += Score::SINGLE_MARK; // Full score; position already marked.
                 step = step > 0 ? step + 1 : step - 1; // Proceed on the same direction.
-                interval++;
+                score += scoreOf(SINGLE_MARK, abs(step)); // Full score; position already marked.
+                seqCount++;
             }
             else // blocked on this direction
             {
+                // A blocked line should be worth less than a free one.
+                score -= scoreOf(BLOCKED, abs(step) - 1);
+
                 if (step <= 1)
                 {
                     // Already blocked on the immediate neighbor, or on the opposite direction; giving up on this direction.
@@ -166,26 +152,26 @@ public:
                     // Trying out on the opposite direction.
                     step = -1;
                 }
-                score--; // A blocked line should be worth less than a free one.
             }
 
-            if (previous != _playedPosition and not _gameBoard.positionsMatch(previous, current))
+            if (not _gameBoard.positionsMatch(previous, current))
             {
-                score++; // Intermittent lines score higher because they can be overlooked by the adversary.
+                // Intermittent lines score higher because they can be overlooked by the adversary.
+                score += scoreOf(INTERMITTENT, abs(step));
             }
 
-            if (DEBUG<HeuristicLevel>::enabled)
+            if (DEBUG<HeuristicDetailedLevel>::enabled)
             {
                 cout << "Score: " << score << " of " << current << endl;
             }
         }
 
-        if (DEBUG<HeuristicLevel>::enabled)
+        if (DEBUG<HeuristicDetailedLevel>::enabled)
         {
             cout << endl;
         }
 
-        if (interval == WINNING_COUNT)
+        if (seqCount == WINNING_COUNT)
         {
             return score; // This direction has some potential.
         }
@@ -223,12 +209,12 @@ public:
 
     GamePosition bestPositionFor(const PlayerMarker & playerMarker)
     {
-        int maxScore = MIN_SCORE;
+        Score maxScore = MIN_SCORE;
         GamePosition bestPosition;
 
         for (const auto &gameNode : _root.childrenFor(playerMarker))
         {
-            int score = minMax(gameNode, playerMarker);
+            Score score = minMax(gameNode, playerMarker);
             if (score > maxScore)
             {
                 maxScore = score;
@@ -250,11 +236,8 @@ public:
 
 private:
 
-    static constexpr int MAX_SCORE = score(X, WIN);
-    static constexpr int MIN_SCORE = score(O, WIN);
-
     // TODO Basic implementation of min-max - part 2 will implement alpha/beta
-    int minMax(GameNode node, PlayerMarker playerMarker)
+    Score minMax(GameNode node, PlayerMarker playerMarker)
     {
         if (DEBUG<MidLevel>::enabled)
         {
@@ -263,7 +246,7 @@ private:
 
         if (node.level() == _deepestLevel or node.isGameOver())
         {
-            const int score = node.scoreFor(playerMarker);
+            const Score score = node.scoreFor(playerMarker);
 
             if (DEBUG<BottomLevel>::enabled)
             {
@@ -286,12 +269,12 @@ private:
         }
     }
 
-    int max(vector<GameNode> children, PlayerMarker playerMarker)
+    Score max(vector<GameNode> children, PlayerMarker playerMarker)
     {
-        int maxScore = MIN_SCORE;
+        Score maxScore = MIN_SCORE;
         for (const auto &gameNode : children)
         {
-            int score = minMax(gameNode, playerMarker);
+            Score score = minMax(gameNode, playerMarker);
             if (score > maxScore)
             {
                 maxScore = score;
@@ -300,12 +283,12 @@ private:
         return maxScore;
     }
 
-    int min(vector<GameNode> children, PlayerMarker playerMarker)
+    Score min(vector<GameNode> children, PlayerMarker playerMarker)
     {
-        int minScore = MAX_SCORE;
+        Score minScore = MAX_SCORE;
         for (const auto &gameNode : children)
         {
-            int score = minMax(gameNode, playerMarker);
+            Score score = minMax(gameNode, playerMarker);
             if (score < minScore)
             {
                 minScore = score;

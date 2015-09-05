@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "integer_math.h"
 #include "game_area.h"
 
 enum Direction { North, Northeast, East, Southeast, South, Southwest, West, Northwest };
@@ -26,6 +27,25 @@ public:
     {
         return _line >= area.startLine() and _line <= area.endLine() and
                _column >= area.startColumn() and _column <= area.endLine();
+    }
+
+    int distanceTo(const GamePosition & position) const
+    {
+        const int verticalDistance = abs(_line - position._line);
+        const int horizontalDistance = abs(_column - position._column);
+
+        if (_line == position._line)
+        {
+            return horizontalDistance;
+        }
+        else if (_column == position._column)
+        {
+            return verticalDistance;
+        }
+        else
+        {
+            return isqrt(ipow(verticalDistance, 2) + ipow(horizontalDistance, 2));
+        }
     }
 
     GamePosition neighbor(const Direction & direction, const int & step) const
@@ -94,6 +114,7 @@ private:
 };
 
 static const GamePosition INVALID_POSITION;
+static const GamePosition CENTER { 7, 7 };
 
 inline ostream & operator << (ostream &os, const GamePosition &position)
 {

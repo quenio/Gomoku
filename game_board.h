@@ -127,14 +127,14 @@ public:
         }
     }
 
-    bool positionsMatch(const GamePosition & left, const GamePosition &right) const
+    bool positionsMatch(const GamePosition & left, const GamePosition & right) const
     {
         if (left.valid() and right.valid())
         {
             const GameSlot leftSlot = _slots[left.line()][left.column()];
             const GameSlot rightSlot = _slots[right.line()][right.column()];
 
-            return leftSlot == rightSlot;
+            return left != right and leftSlot == rightSlot;
         }
         else
         {

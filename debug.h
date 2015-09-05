@@ -7,6 +7,7 @@ class TopLevel;
 class MidLevel;
 class BottomLevel;
 class HeuristicLevel;
+class HeuristicDetailedLevel;
 
 template <class C> struct DEBUG
 {
@@ -33,4 +34,8 @@ template <> struct DEBUG<HeuristicLevel>
     static const bool enabled = true;
 };
 
+template <> struct DEBUG<HeuristicDetailedLevel>
+{
+    static const bool enabled = false;
+};
 
