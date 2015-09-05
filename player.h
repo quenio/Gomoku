@@ -64,17 +64,24 @@ public:
 
     GameBoard play(GameBoard &gameBoard)
     {
-        cout << "Your turn:" << endl;
+        cout << "Your turn: ";
 
-        string cellAddress;
-        cin >> cellAddress;
+        string address;
+        cin >> address;
         cout << endl;
 
-        int line = cellAddress[1] - '0' - 1;
-        int column = cellAddress[0] - 'A';
 
-        return gameBoard.play(GamePosition { line, column }, _marker);
+        int line = address.size() == 3 ? lineFromChar(address[1]) * 10 + lineFromChar(address[2]) : lineFromChar(address[1]);
+        int column = columnFromChar(address[0]);
+
+        return gameBoard.play(GamePosition { line - 1, column }, _marker);
     }
+
+private:
+
+    int lineFromChar(char c) const { return c - '0'; }
+
+    int columnFromChar(char c) const { return c - 'A'; }
 
 };
 

@@ -76,6 +76,11 @@ public:
 
     int heuristicScore() const
     {
+        if (DEBUG<HeuristicLevel>::enabled)
+        {
+            cout << "Heuristic of " << _playedPosition << endl << endl;
+        }
+
         int max = 0;
         int extra = 0;
 
@@ -106,44 +111,78 @@ public:
         int step = 1;
         int interval = 1;
 
-        GamePosition previous, current = _playedPosition;
-        while (current.valid() && interval < WINNING_COUNT)
+        if (DEBUG<HeuristicLevel>::enabled)
         {
-            previous = current;
-            current = current.neighbor(direction, step);
+            cout << "Direction: " << direction << " - " << marker << endl;
+        }
 
-            if (not current.valid() or not _gameBoard.markedIn(current, marker)) // blocked on this direction
+        GamePosition previous, current = _playedPosition;
+        while (current.valid() and interval < WINNING_COUNT)
+        {
+            if (step > 5)
+            {
+                if (DEBUG<HeuristicLevel>::enabled)
+                {
+                    cout << "Step: " << step << endl;
+                }
+
+                throw runtime_error { "Heuristhic function should not go farther than 5 steps." };
+            }
+
+            previous = current;
+            current = _playedPosition.neighbor(direction, step);
+
+            if (previous == current)
+            {
+                if (DEBUG<HeuristicLevel>::enabled)
+                {
+                    cout << "Step: " << step << endl;
+                }
+
+                throw runtime_error { "Unable to find neighbor position." };
+            }
+
+            if (_gameBoard.emptyIn(current))
+            {
+                score += Score::EMPTY_POSITION; // half-score; since this position is just a possibility at this point.
+                step = step > 0 ? step + 1 : step - 1; // Proceed on the same direction.
+                interval++;
+            }
+            else if (_gameBoard.markedIn(current, marker))
+            {
+                score += Score::SINGLE_MARK; // Full score; position already marked.
+                step = step > 0 ? step + 1 : step - 1; // Proceed on the same direction.
+                interval++;
+            }
+            else // blocked on this direction
             {
                 if (step == 1)
                 {
                     // Since already blocked on the immediate neighbor, giving up on this direction.
-                    current = INVALID_POSITION;
+                    previous = current = INVALID_POSITION;
                 }
                 else if (step > 1)
                 {
                     // Trying out on the opposite direction.
                     step = -1;
-                    current = _playedPosition;
                 }
                 score--; // A blocked line should be worth less than a free one.
             }
-            else if (_gameBoard.markedIn(current, marker))
-            {
-                score += Score::SINGLE_MARK; // Full score; position already marked.
-                step++; // Proceed on the same direction.
-                interval++;
-            }
-            else if (_gameBoard.emptyIn(current))
-            {
-                score += Score::EMPTY_POSITION; // half-score; since this position is just a possibility at this point.
-                step++; // Proceed on the same direction.
-                interval++;
-            }
 
-            if (previous != _playedPosition and _gameBoard.positionsMatch(previous, current))
+            if (previous != _playedPosition and not _gameBoard.positionsMatch(previous, current))
             {
                 score++; // Intermittent lines score higher because they can be overlooked by the adversary.
             }
+
+            if (DEBUG<HeuristicLevel>::enabled)
+            {
+                cout << "Score: " << score << " of " << current << endl;
+            }
+        }
+
+        if (DEBUG<HeuristicLevel>::enabled)
+        {
+            cout << endl;
         }
 
         if (interval == WINNING_COUNT)

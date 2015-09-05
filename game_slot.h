@@ -74,16 +74,13 @@ inline bool operator == (const GameSlot & lhs, const GameSlot & rhs)
 
 inline ostream & operator << (ostream &os, const GameSlot &gameSlot)
 {
-    if (gameSlot.empty()) {
+    if (gameSlot.empty())
+    {
         os << "⋆";
     }
-    else if (gameSlot.markedBy(PlayerMarker::X))
+    else
     {
-        os << "X";
-    }
-    else if (gameSlot.markedBy(PlayerMarker::O))
-    {
-        os << "O";
+        os << gameSlot.playerMarker();
     }
     return os;
 }

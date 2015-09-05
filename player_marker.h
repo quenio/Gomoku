@@ -18,3 +18,9 @@ inline bool maxTurn(const PlayerMarker & playerMaker)
     return playerMaker == X;
 }
 
+
+inline ostream & operator << (ostream &os, const PlayerMarker &marker)
+{
+    os << (marker == X ? "X" : "O");
+    return os;
+}

@@ -105,27 +105,41 @@ public:
 
     bool markedIn(const GamePosition & position, const PlayerMarker & playerMarker) const
     {
-        checkRangeOf(position);
-
-        return _slots[position.line(), position.column()]->markedBy(playerMarker);
+        if (position.valid())
+        {
+            return _slots[position.line()][ position.column()].markedBy(playerMarker);
+        }
+        else
+        {
+            return false;
+        }
     }
 
     bool emptyIn(const GamePosition & position) const
     {
-        checkRangeOf(position);
-
-        return _slots[position.line(), position.column()]->empty();
+        if (position.valid())
+        {
+            return _slots[position.line()][position.column()].empty();
+        }
+        else
+        {
+            return false;
+        }
     }
 
     bool positionsMatch(const GamePosition & left, const GamePosition &right) const
     {
-        checkRangeOf(left);
-        checkRangeOf(right);
+        if (left.valid() and right.valid())
+        {
+            const GameSlot leftSlot = _slots[left.line()][left.column()];
+            const GameSlot rightSlot = _slots[right.line()][right.column()];
 
-        const GameSlot leftSlot = _slots[left.line()][left.column()];
-        const GameSlot rightSlot = _slots[right.line()][right.column()];
-
-        return leftSlot == rightSlot;
+            return leftSlot == rightSlot;
+        }
+        else
+        {
+            return false;
+        }
     }
 
     bool isClearInAreaForPlay(const GameArea & area, const GamePosition & position) const

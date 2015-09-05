@@ -76,7 +76,7 @@ public:
 
     bool operator == (const GamePosition & position) const
     {
-        return _line == position._line or _column == position._column;
+        return _line == position._line and _column == position._column;
     }
 
     bool operator != (const GamePosition & position) const
@@ -97,6 +97,56 @@ static const GamePosition INVALID_POSITION;
 
 inline ostream & operator << (ostream &os, const GamePosition &position)
 {
-    os << "(" << position._line << "," << position._column << ")";
+    os << "(" << position._line << "," << position._column;
+
+    if (position.valid())
+    {
+        os << ":" << char('A' + position._column) << (position._line + 1) <<  ")";
+    }
+    else
+    {
+        os << ")";
+    }
+
+    return os;
+}
+
+inline ostream & operator << (ostream &os, const Direction &direction)
+{
+    switch (direction)
+    {
+        case North:
+            os << "North";
+            break;
+
+        case Northeast:
+            os << "Northeast";
+            break;
+
+        case East:
+            os << "East";
+            break;
+
+        case Southeast:
+            os << "Southeast";
+            break;
+
+        case South:
+            os << "South";
+            break;
+
+        case Southwest:
+            os << "Southwest";
+            break;
+
+        case West:
+            os << "West";
+            break;
+
+        case Northwest:
+            os << "Northwest";
+            break;
+    }
+
     return os;
 }
