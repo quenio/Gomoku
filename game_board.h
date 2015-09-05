@@ -43,7 +43,7 @@ public:
             int count = 1;
             for (int column = 0; column < COLUMN_COUNT - 1; column++)
             {
-                count = (_slots[line][column] == _slots[line][column + 1] ? count + 1 : 0);
+                count = (_slots[line][column] == _slots[line][column + 1] ? count + 1 : 1);
                 if (count == WINNING_COUNT)
                 {
                     playerMarker = _slots[line][column]._playerMarker;
@@ -58,10 +58,10 @@ public:
     {
         for (int column = 0; column < COLUMN_COUNT; column++)
         {
-            int count = 0;
+            int count = 1;
             for (int line = 0; line < LINE_COUNT - 1; line++)
             {
-                count = (_slots[line][column] == _slots[line + 1][column] ? count + 1 : 0);
+                count = (_slots[line][column] == _slots[line + 1][column] ? count + 1 : 1);
                 if (count == WINNING_COUNT)
                 {
                     playerMarker = _slots[line][column]._playerMarker;
