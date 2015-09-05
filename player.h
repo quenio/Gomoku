@@ -63,17 +63,14 @@ public:
 
     GameBoard play(GameBoard &gameBoard)
     {
-        cout << "Your turn." << endl;
+        cout << "Your turn:" << endl;
 
-        int line;
-        cout << "Line: ";
-        cin >> line;
-
-        int column;
-        cout << "Column: ";
-        cin >> column;
-
+        string cellAddress;
+        cin >> cellAddress;
         cout << endl;
+
+        int line = cellAddress[1] - '0' - 1;
+        int column = cellAddress[0] - 'A';
 
         return gameBoard.play(GamePlay { line, column }, _marker);
     }

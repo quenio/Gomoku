@@ -4,7 +4,7 @@
 
 int main()
 {
-    Game game {};
+    Game game;
 
     game.startWithPlayer(game.ai());
 

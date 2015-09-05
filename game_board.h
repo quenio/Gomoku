@@ -126,13 +126,28 @@ private:
 
 ostream & operator << (ostream &os, const GameBoard &gameBoard)
 {
+    // Display column letters:
+    os << "   ";
+    for (int column = 0; column < COLUMN_COUNT; column++)
+    {
+        os << char('A' + column) << " ";
+    }
+    os << endl;
+
+    // Display actual board:
     for (int line = 0; line < LINE_COUNT; line++)
     {
+        os.width(2);
+        os << line + 1 << ' ';
+        os.width(0);
+
         for (int column = 0; column < COLUMN_COUNT; column++)
         {
             os << gameBoard._slots[line][column] << " ";
         }
+
         os << endl;
     }
+
     return os;
 }
