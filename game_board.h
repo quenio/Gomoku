@@ -11,7 +11,7 @@ public:
 
     bool isGameOver() const
     {
-        return hasWinner() or availablePositions().size() == 0;
+        return hasWinner() or emptyPositions().size() == 0;
     }
 
     bool hasWinner() const
@@ -85,7 +85,7 @@ public:
         return newGameBoard;
     }
 
-    vector<GamePosition> availablePositions(const GameArea & area = FULL_BOARD) const
+    vector<GamePosition> emptyPositions(const GameArea &area = FULL_BOARD) const
     {
         vector<GamePosition> positions;
 
@@ -130,7 +130,7 @@ public:
 
     bool isClearInAreaForPlay(const GameArea & area, const GamePosition & position) const
     {
-        return position.in(area) and int(availablePositions(area).size()) == (area.slotCount() - 1);
+        return position.in(area) and int(emptyPositions(area).size()) == (area.slotCount() - 1);
     }
 
     friend ostream & operator << (ostream &os, const GameBoard &gameBoard);

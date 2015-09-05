@@ -34,7 +34,7 @@ public:
     vector<GameNode> childrenFor(const PlayerMarker & playerMarker)
     {
         vector<GameNode> result;
-        for (const auto & nextPosition : _gameBoard.availablePositions())
+        for (const auto & nextPosition : _gameBoard.emptyPositions())
         {
             GameBoard newGameBoard { _gameBoard.play(nextPosition, playerMarker) };
             result.push_back(GameNode { nextPosition, newGameBoard, _level + 1 });
