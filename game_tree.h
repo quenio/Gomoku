@@ -156,9 +156,9 @@ public:
             }
             else // blocked on this direction
             {
-                if (step == 1)
+                if (step <= 1)
                 {
-                    // Since already blocked on the immediate neighbor, giving up on this direction.
+                    // Already blocked on the immediate neighbor, or on the opposite direction; giving up on this direction.
                     previous = current = INVALID_POSITION;
                 }
                 else if (step > 1)
