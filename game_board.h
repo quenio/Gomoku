@@ -3,17 +3,15 @@
 #pragma once
 
 #include "game_slot.h"
-#include "game_play.h"
+#include "game_position.h"
 
 class GameBoard
 {
 public:
 
-    static const int WINNING_COUNT = 5;
-
     bool isGameOver() const
     {
-        return hasWinner() or validPlays().size() == 0;
+        return hasWinner() or availablePositions().size() == 0;
     }
 
     bool hasWinner() const
@@ -76,49 +74,81 @@ public:
 
     // TODO Implement diagonalVictory()
 
-    GameBoard play(GamePlay newPlay, const PlayerMarker &playerMarker) const
+    GameBoard play(const GamePosition & position, const PlayerMarker & playerMarker) const
     {
-        if (newPlay.line() < 0 or newPlay.line() >= LINE_COUNT)
-        {
-            throw out_of_range { "Line number out of range" };
-        }
-
-        if (newPlay.column() < 0 or newPlay.column() >= COLUMN_COUNT)
-        {
-            throw out_of_range { "Column number out of range" };
-        }
+        checkRangeOf(position);
 
         GameBoard newGameBoard { *this };
 
-        newGameBoard._slots[newPlay.line()][newPlay.column()].mark(playerMarker);
+        newGameBoard._slots[position.line()][position.column()].mark(playerMarker);
 
         return newGameBoard;
     }
 
-    vector<GamePlay> validPlays(const GameArea & area = FULL_BOARD) const
+    vector<GamePosition> availablePositions(const GameArea & area = FULL_BOARD) const
     {
-        vector<GamePlay> legalPlays;
+        vector<GamePosition> positions;
 
-        for (int line = area.startLine(); line <= area.endLine(); line++) {
-            for (int column = area.startColumn(); column <= area.endColumn(); column++) {
-                if (_slots[line][column].isEmpty())
+        for (int line = area.startLine(); line <= area.endLine(); line++)
+        {
+            for (int column = area.startColumn(); column <= area.endColumn(); column++)
+            {
+                if (_slots[line][column].empty())
                 {
-                    legalPlays.push_back(GamePlay(line, column));
+                    positions.push_back(GamePosition { line, column });
                 }
             }
         }
 
-        return legalPlays;
+        return positions;
     }
 
-    bool isClearInAreaForPlay(const GameArea & area, const GamePlay & gamePlay) const
+    bool markedIn(const GamePosition & position, const PlayerMarker & playerMarker) const
     {
-        return gamePlay.in(area) and int(validPlays(area).size()) == (area.slotCount() - 1);
+        checkRangeOf(position);
+
+        return _slots[position.line(), position.column()]->markedBy(playerMarker);
+    }
+
+    bool emptyIn(const GamePosition & position) const
+    {
+        checkRangeOf(position);
+
+        return _slots[position.line(), position.column()]->empty();
+    }
+
+    bool positionsMatch(const GamePosition & left, const GamePosition &right) const
+    {
+        checkRangeOf(left);
+        checkRangeOf(right);
+
+        const GameSlot leftSlot = _slots[left.line()][left.column()];
+        const GameSlot rightSlot = _slots[right.line()][right.column()];
+
+        return leftSlot == rightSlot;
+    }
+
+    bool isClearInAreaForPlay(const GameArea & area, const GamePosition & position) const
+    {
+        return position.in(area) and int(availablePositions(area).size()) == (area.slotCount() - 1);
     }
 
     friend ostream & operator << (ostream &os, const GameBoard &gameBoard);
 
 private:
+
+    void checkRangeOf(const GamePosition &position) const
+    {
+        if (position.line() < 0 or position.line() >= LINE_COUNT)
+        {
+            throw runtime_error { "Line number out of range" };
+        }
+
+        if (position.column() < 0 or position.column() >= COLUMN_COUNT)
+        {
+            throw runtime_error { "Column number out of range" };
+        }
+    }
 
     GameSlot _slots[LINE_COUNT][COLUMN_COUNT];
 

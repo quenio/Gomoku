@@ -37,6 +37,8 @@ private:
 static const int LINE_COUNT = 15;
 static const int COLUMN_COUNT = 15;
 
+static const int WINNING_COUNT = 5;
+
 static const GameArea FULL_BOARD { 0, 0, LINE_COUNT - 1, COLUMN_COUNT - 1 };
-static const GameArea CENTRAL_AREA { 6, 5 };
+static const GameArea CENTRAL_AREA { WINNING_COUNT + 1, WINNING_COUNT };
 

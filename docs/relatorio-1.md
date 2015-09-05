@@ -108,7 +108,7 @@ int score(GameNode node)
     }
     else if (score > max)
     {
-      max = score
+      max = score;
       extra = 0;
     }
   }
@@ -119,7 +119,7 @@ int score(GameNode node)
 O cálculo da pontuação de cada direção do tabuleiro descrita no passo 1 acima pode ser descrito em "C":
 
 ```C++
-int score(GameNode node, Direction direction, PlayerMaker marker)
+int score(GameNode node, Direction direction, PlayerMarker marker)
 {
   int score = 100;
   int step = 1;
@@ -127,7 +127,7 @@ int score(GameNode node, Direction direction, PlayerMaker marker)
   Slot current = node.slot;  
   while (current != nullptr && interval < 5)
   {
-    previous = current
+    previous = current;
     current = neighbor(current, direction, step);
     if (current == nullptr || current.marker != marker) // bloqueado
     {

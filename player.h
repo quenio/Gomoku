@@ -45,8 +45,8 @@ public:
     GameBoard play(GameBoard& gameBoard)
     {
         GameTree gameTree { gameBoard, _skill };
-        GamePlay bestPlay = gameTree.bestPlayFor(_marker);
-        return gameBoard.play(bestPlay, _marker);
+        GamePosition bestPosition = gameTree.bestPositionFor(_marker);
+        return gameBoard.play(bestPosition, _marker);
     }
 
 private:
@@ -57,6 +57,7 @@ private:
 class HumanPlayer: public Player
 {
 public:
+
     HumanPlayer(): Player { "Charlie Brown", O }
     {
     }
@@ -72,7 +73,7 @@ public:
         int line = cellAddress[1] - '0' - 1;
         int column = cellAddress[0] - 'A';
 
-        return gameBoard.play(GamePlay { line, column }, _marker);
+        return gameBoard.play(GamePosition { line, column }, _marker);
     }
 
 };

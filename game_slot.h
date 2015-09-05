@@ -8,7 +8,7 @@ class GameSlot
 {
 public:
 
-    bool hasPlayerMarker(const PlayerMarker & playerMarker) const
+    bool markedBy(const PlayerMarker & playerMarker) const
     {
         if (_empty)
         {
@@ -20,14 +20,14 @@ public:
         }
     }
 
-    bool isEmpty() const
+    bool empty() const
     {
         return _empty;
     }
 
     PlayerMarker playerMarker() const
     {
-        if (isEmpty())
+        if (_empty)
         {
             throw runtime_error { "Game slot is empty." };
         }
@@ -74,14 +74,14 @@ inline bool operator == (const GameSlot & lhs, const GameSlot & rhs)
 
 inline ostream & operator << (ostream &os, const GameSlot &gameSlot)
 {
-    if (gameSlot.isEmpty()) {
+    if (gameSlot.empty()) {
         os << "⋆";
     }
-    else if (gameSlot.hasPlayerMarker(PlayerMarker::X))
+    else if (gameSlot.markedBy(PlayerMarker::X))
     {
         os << "X";
     }
-    else if (gameSlot.hasPlayerMarker(PlayerMarker::O))
+    else if (gameSlot.markedBy(PlayerMarker::O))
     {
         os << "O";
     }

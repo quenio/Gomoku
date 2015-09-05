@@ -5,16 +5,17 @@
 #include "game_board.h"
 #include "debug.h"
 
-enum ScoreWeight
+enum Score
 {
-    WIN = 1000, // The game board has a victory.
-    CLEAR_FIELD = 10, // The 5x5 area of the game board inspected has all slots available.
-    DRAW = 0 // The game board has come to a draw.
+    DRAW = 0, // The game board has come to a draw.
+    EMPTY_POSITION = 50, // An empty position is just a possibility.
+    SINGLE_MARK = 100, // A single mark on the game board.
+    WIN = 500, // The game board has a victory.
 };
 
-constexpr int score(const PlayerMarker & playerMarker, const ScoreWeight & scoreWeight)
+constexpr int score(const PlayerMarker & playerMarker, const int & score)
 {
-    return (playerMarker == X ? +1 : -1) * scoreWeight;
+    return (playerMarker == X ? +1 : -1) * score;
 }
 
 class GameNode
@@ -25,25 +26,26 @@ public:
     {
     }
 
-    GameNode(const GamePlay & gamePlay, const GameBoard & gameBoard, int level):
-        _gamePlay { gamePlay }, _gameBoard { gameBoard }, _level { level }
+    GameNode(const GamePosition & playedPosition, const GameBoard & gameBoard, int level):
+        _playedPosition { playedPosition }, _gameBoard { gameBoard }, _level { level }
     {
     }
 
     vector<GameNode> childrenFor(const PlayerMarker & playerMarker)
     {
         vector<GameNode> result;
-        for (const auto &newPlay : _gameBoard.validPlays())
+        for (const auto & nextPosition : _gameBoard.availablePositions())
         {
-            GameBoard newGameBoard { _gameBoard.play(newPlay, playerMarker) };
-            result.push_back(GameNode { newPlay, newGameBoard, _level + 1 });
+            GameBoard newGameBoard { _gameBoard.play(nextPosition, playerMarker) };
+            result.push_back(GameNode { nextPosition, newGameBoard, _level + 1 });
         }
         return result;
     }
 
-    GamePlay gamePlay() const { return _gamePlay; }
+    GamePosition playedPosition() const { return _playedPosition; }
 
-    // TODO Modify in part 2 to implement envisioned algorithm that takes into account the heuristics.
+    bool isGameOver() const { return _gameBoard.isGameOver(); }
+
     int scoreFor(PlayerMarker playerMarker) const
     {
         if (isGameOver())
@@ -52,11 +54,9 @@ public:
         }
         else
         {
-            return heuristicScore(playerMarker);
+            return ::score(playerMarker, heuristicScore());
         }
     }
-
-    bool isGameOver() const { return _gameBoard.isGameOver(); }
 
     int utilityScore() const
     {
@@ -74,32 +74,85 @@ public:
         }
     }
 
-    // Naive, initial implementation of heuristics.
-    int heuristicScore(const PlayerMarker & playerMarker) const
+    int heuristicScore() const
     {
-        if (DEBUG<HeuristicLevel>::enabled)
+        int max = 0;
+        int extra = 0;
+
+        for (int direction = North; direction <= Northwest; direction++)
         {
-            cout << "Heuristic Player Marker: " << playerMarker << endl;
+            for (int playerMarker = X; playerMarker <= O; playerMarker++)
+            {
+                int score = directionScore(Direction(direction), PlayerMarker(playerMarker));
+
+                if (score == max)
+                {
+                    extra++;
+                }
+                else if (score > max)
+                {
+                    max = score;
+                    extra = 0;
+                }
+            }
         }
 
-        return ::score(playerMarker, heuristicWeight());
+        return max + extra;
     }
 
-    ScoreWeight heuristicWeight() const
+    int directionScore(const Direction & direction, const PlayerMarker & marker) const
     {
-        if (DEBUG<HeuristicLevel>::enabled)
+        int score = Score::SINGLE_MARK; // Considers the node's played position as marked by the param marker.
+        int step = 1;
+        int interval = 1;
+
+        GamePosition previous, current = _playedPosition;
+        while (current.valid() && interval < WINNING_COUNT)
         {
-            cout << "Valid Play Count: " << int(_gameBoard.validPlays(CENTRAL_AREA).size()) << endl;
-            cout << "Slot Count: " << CENTRAL_AREA.slotCount() << endl << endl;
+            previous = current;
+            current = current.neighbor(direction, step);
+
+            if (not current.valid() or not _gameBoard.markedIn(current, marker)) // blocked on this direction
+            {
+                if (step == 1)
+                {
+                    // Since already blocked on the immediate neighbor, giving up on this direction.
+                    current = INVALID_POSITION;
+                }
+                else if (step > 1)
+                {
+                    // Trying out on the opposite direction.
+                    step = -1;
+                    current = _playedPosition;
+                }
+                score--; // A blocked line should be worth less than a free one.
+            }
+            else if (_gameBoard.markedIn(current, marker))
+            {
+                score += Score::SINGLE_MARK; // Full score; position already marked.
+                step++; // Proceed on the same direction.
+                interval++;
+            }
+            else if (_gameBoard.emptyIn(current))
+            {
+                score += Score::EMPTY_POSITION; // half-score; since this position is just a possibility at this point.
+                step++; // Proceed on the same direction.
+                interval++;
+            }
+
+            if (previous != _playedPosition and _gameBoard.positionsMatch(previous, current))
+            {
+                score++; // Intermittent lines score higher because they can be overlooked by the adversary.
+            }
         }
 
-        if (_gameBoard.isClearInAreaForPlay(CENTRAL_AREA, _gamePlay))
+        if (interval == WINNING_COUNT)
         {
-            return CLEAR_FIELD;
+            return score; // This direction has some potential.
         }
         else
         {
-            return DRAW;
+            return 0; // There are not enough positions available on this direction to win the game.
         }
     }
 
@@ -109,7 +162,7 @@ public:
 
 private:
 
-    const GamePlay _gamePlay;
+    const GamePosition _playedPosition;
     const GameBoard _gameBoard;
     const int _level = 0;
 
@@ -117,7 +170,7 @@ private:
 
 ostream & operator << (ostream &os, const GameNode &gameNode)
 {
-    os << gameNode._gameBoard << "Play: " << gameNode._gamePlay << " - Level: " << gameNode._level;
+    os << gameNode._gameBoard << "Play: " << gameNode._playedPosition << " - Level: " << gameNode._level;
     return os;
 }
 
@@ -129,17 +182,18 @@ public:
     {
     }
 
-    GamePlay bestPlayFor(const PlayerMarker & playerMarker)
+    GamePosition bestPositionFor(const PlayerMarker & playerMarker)
     {
         int maxScore = MIN_SCORE;
-        GamePlay bestPlay(-1, -1);
+        GamePosition bestPosition;
+
         for (const auto &gameNode : _root.childrenFor(playerMarker))
         {
             int score = minMax(gameNode, playerMarker);
             if (score > maxScore)
             {
                 maxScore = score;
-                bestPlay = gameNode.gamePlay();
+                bestPosition = gameNode.playedPosition();
             }
 
             if (DEBUG<TopLevel>::enabled and not DEBUG<MidLevel>::enabled)
@@ -151,7 +205,8 @@ public:
                 }
             }
         }
-        return bestPlay;
+
+        return bestPosition;
     }
 
 private:
