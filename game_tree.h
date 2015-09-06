@@ -301,7 +301,13 @@ private:
 
 ostream & operator << (ostream &os, const GameNode &gameNode)
 {
-    os << gameNode._gameBoard << "Play: " << gameNode._playedPosition << " - Level: " << gameNode._level;
+    if (not DEBUG<BottomLevel>::enabled)
+    {
+        os << gameNode._gameBoard << endl;
+    }
+
+    os << "Play: " << gameNode._playedPosition << " - Level: " << gameNode._level;
+
     return os;
 }
 
@@ -332,8 +338,8 @@ public:
             {
                 if (score != 0)
                 {
-                    cout << "DEBUG: Score: " << score << " (max: " << maxScore << ")" << endl;
-                    cout << "DEBUG: GameNode:" << endl << endl << gameNode << endl << endl;
+                    cout << "Score: " << score << " (max: " << maxScore << ") - " << bestPosition << endl;
+                    cout << "GameNode:" << endl << endl << gameNode << endl << endl;
                 }
             }
         }
@@ -366,18 +372,36 @@ private:
         const PlayerMarker opponent = opponentOf(playerMarker);
         const vector<GameNode> children = node.childrenFor(opponent);
 
+        if (DEBUG<BottomLevel>::enabled)
+        {
+            cout << "minMax: in: " << node << endl;
+        }
+
+        Score score;
         if (maxTurn(opponent))
         {
-            return max(children, opponent, alpha, beta);
+            score = max(children, opponent, alpha, beta);
         }
         else
         {
-            return min(children, opponent, alpha, beta);
+            score = min(children, opponent, alpha, beta);
         }
+
+        if (DEBUG<BottomLevel>::enabled)
+        {
+            cout << "minMax: out: " << node << " - score: " << score << endl;
+        }
+
+        return score;
     }
 
     Score max(vector<GameNode> children, PlayerMarker playerMarker, Score alpha, Score beta)
     {
+        if (DEBUG<BottomLevel>::enabled)
+        {
+            cout << "max: in (" << playerMarker << ": " << alpha << "," << beta << ")" << endl;
+        }
+
         for (const auto & gameNode : children)
         {
             const Score score = minMax(gameNode, playerMarker, alpha, beta);
@@ -389,8 +413,15 @@ private:
 
             if (alpha >= beta)
             {
+                cout << "max: break" << endl;
+
                 break;
             }
+        }
+
+        if (DEBUG<BottomLevel>::enabled)
+        {
+            cout << "max: out (" << playerMarker << ": " << alpha << "," << beta << ")" << endl;
         }
 
         return alpha;
@@ -398,6 +429,11 @@ private:
 
     Score min(vector<GameNode> children, PlayerMarker playerMarker, Score alpha, Score beta)
     {
+        if (DEBUG<BottomLevel>::enabled)
+        {
+            cout << "min: in (" << playerMarker << ": " << alpha << "," << beta << ")" << endl;
+        }
+
         for (const auto & gameNode : children)
         {
             const Score score = minMax(gameNode, playerMarker, alpha, beta);
@@ -409,8 +445,15 @@ private:
 
             if (alpha >= beta)
             {
+                cout << "min: break" << endl;
+
                 break;
             }
+        }
+
+        if (DEBUG<BottomLevel>::enabled)
+        {
+            cout << "min: out (" << playerMarker << ": " << alpha << "," << beta << ")" << endl;
         }
 
         return beta;
