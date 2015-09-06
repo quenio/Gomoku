@@ -48,7 +48,7 @@ public:
         }
     }
 
-    GamePosition neighbor(const Direction & direction, const int & step) const
+    GamePosition neighbor(const Direction & direction, const int & step = 1) const
     {
         int newLine = _line, newColumn = _column;
 

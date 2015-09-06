@@ -18,7 +18,7 @@ public:
     {
         PlayerMarker playerMarker;
 
-        return lineVictory(playerMarker) or columnVictory(playerMarker);
+        return victoryFound(playerMarker);
     }
 
     bool isDraw() const
@@ -30,49 +30,133 @@ public:
     {
         PlayerMarker playerMarker;
 
-        if (lineVictory(playerMarker)) return playerMarker;
-        if (columnVictory(playerMarker)) return playerMarker;
+        if (victoryFound(playerMarker)) return playerMarker;
 
         throw runtime_error { "Game has no winner yet." };
     }
 
-    bool lineVictory(PlayerMarker & playerMarker) const
+    bool victoryFound(PlayerMarker & marker) const
     {
+        // Horizontal
         for (int line = 0; line < LINE_COUNT; line++)
         {
-            int count = 1;
-            for (int column = 0; column < COLUMN_COUNT - 1; column++)
+            auto start = GamePosition { line, 0 };
+
+            if (victoryFound(start, East, marker))
             {
-                count = (_slots[line][column] == _slots[line][column + 1] ? count + 1 : 1);
-                if (count == WINNING_COUNT)
-                {
-                    playerMarker = _slots[line][column]._playerMarker;
-                    return true;
-                }
+                return true;
             }
         }
-        return false;
-    }
 
-    bool columnVictory(PlayerMarker & playerMarker) const
-    {
+        // Vertical
         for (int column = 0; column < COLUMN_COUNT; column++)
         {
-            int count = 1;
-            for (int line = 0; line < LINE_COUNT - 1; line++)
+            auto start = GamePosition { 0, column };
+
+            if (victoryFound(start, South, marker))
             {
-                count = (_slots[line][column] == _slots[line + 1][column] ? count + 1 : 1);
-                if (count == WINNING_COUNT)
-                {
-                    playerMarker = _slots[line][column]._playerMarker;
-                    return true;
-                }
+                return true;
             }
         }
+
+        // Diagonal - Northeast - Superior
+        for (int line = WINNING_COUNT - 1; line < LINE_COUNT; line++)
+        {
+            auto start = GamePosition { line, 0 };
+
+            if (victoryFound(start, Northeast, marker))
+            {
+                return true;
+            }
+        }
+
+        // Diagonal - Northeast - Inferior
+        for (int column = 1; column < COLUMN_COUNT - WINNING_COUNT; column++)
+        {
+            auto start = GamePosition { 0, column };
+
+            if (victoryFound(start, Northeast, marker))
+            {
+                return true;
+            }
+        }
+
+        // Diagonal - Southeast - Superior
+        for (int column = 0; column < COLUMN_COUNT - WINNING_COUNT; column++)
+        {
+            auto start = GamePosition { 0, column };
+
+            if (victoryFound(start, Southeast, marker))
+            {
+                return true;
+            }
+        }
+
+        // Diagonal - Southeast - Inferior
+        for (int line = 1; line < LINE_COUNT - WINNING_COUNT; line++)
+        {
+            auto start = GamePosition { line, 0 };
+
+            if (victoryFound(start, Southeast, marker))
+            {
+                return true;
+            }
+        }
+
         return false;
     }
 
-    // TODO Implement diagonalVictory()
+    bool victoryFound(const GamePosition & start, const Direction & direction, PlayerMarker & playerMarker) const
+    {
+        auto current = start;
+
+        while (current.valid())
+        {
+            while (emptyIn(current))
+            {
+                current = current.neighbor(direction);
+            }
+
+            int count = 1;
+
+            while (current.valid())
+            {
+                auto previous = current;
+
+                current = current.neighbor(direction);
+
+                if (positionsMatch(previous, current))
+                {
+                    if (markerInPosition(previous) != markerInPosition(current))
+                    {
+                        throw runtime_error { "Markers should match at this point. " };
+                    }
+
+                    if (++count == WINNING_COUNT)
+                    {
+                        playerMarker = markerInPosition(current);
+                        return true;
+                    }
+                }
+                else
+                {
+                    break;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    PlayerMarker markerInPosition(const GamePosition & position) const
+    {
+        if (emptyIn(position))
+        {
+            throw runtime_error { "No player marker available in this position." };
+        }
+
+        return _slots[position.line()][position.column()]._playerMarker;
+    }
 
     GameBoard play(const GamePosition & position, const PlayerMarker & playerMarker) const
     {
