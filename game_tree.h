@@ -318,9 +318,10 @@ public:
         Score maxScore = MIN_SCORE;
         GamePosition bestPosition;
 
-        for (const auto &gameNode : _root.childrenFor(playerMarker))
+        for (const auto & gameNode : _root.childrenFor(playerMarker))
         {
-            Score score = minMax(gameNode, playerMarker);
+            const Score score = minMax(gameNode, playerMarker, maxScore, MAX_SCORE);
+
             if (score > maxScore)
             {
                 maxScore = score;
@@ -331,8 +332,8 @@ public:
             {
                 if (score != 0)
                 {
-                    cout << "DEBUG: Score: " << score << endl;
-                    cout << "DEBUG: GameNode:" << endl << gameNode << endl << endl;
+                    cout << "DEBUG: Score: " << score << " (max: " << maxScore << ")" << endl;
+                    cout << "DEBUG: GameNode:" << endl << endl << gameNode << endl << endl;
                 }
             }
         }
@@ -343,7 +344,7 @@ public:
 private:
 
     // TODO Basic implementation of min-max - part 2 will implement alpha/beta
-    Score minMax(GameNode node, PlayerMarker playerMarker)
+    Score minMax(GameNode node, PlayerMarker playerMarker, Score alpha, Score beta)
     {
         if (DEBUG<MidLevel>::enabled)
         {
@@ -354,53 +355,65 @@ private:
         {
             const Score score = node.scoreFor(playerMarker);
 
-            if (DEBUG<BottomLevel>::enabled)
+            if (DEBUG<MidLevel>::enabled)
             {
-                cout << "DEBUG: Score: " << score << endl << endl;
+                cout << "DEBUG: Score: " << score << " (" << alpha << "," << beta << ")" << endl << endl;
             }
 
             return score;
         }
 
-        const PlayerMarker adversary = adversaryOf(playerMarker);
-        const vector<GameNode> children = node.childrenFor(adversary);
+        const PlayerMarker opponent = opponentOf(playerMarker);
+        const vector<GameNode> children = node.childrenFor(opponent);
 
-        if (maxTurn(adversary))
+        if (maxTurn(opponent))
         {
-            return max(children, adversary);
+            return max(children, opponent, alpha, beta);
         }
         else
         {
-            return min(children, adversary);
+            return min(children, opponent, alpha, beta);
         }
     }
 
-    Score max(vector<GameNode> children, PlayerMarker playerMarker)
+    Score max(vector<GameNode> children, PlayerMarker playerMarker, Score alpha, Score beta)
     {
-        Score maxScore = MIN_SCORE;
-        for (const auto &gameNode : children)
+        for (const auto & gameNode : children)
         {
-            Score score = minMax(gameNode, playerMarker);
-            if (score > maxScore)
+            const Score score = minMax(gameNode, playerMarker, alpha, beta);
+
+            if (score > alpha)
             {
-                maxScore = score;
+                alpha = score; // a better best move for computer
+            }
+
+            if (alpha >= beta)
+            {
+                break;
             }
         }
-        return maxScore;
+
+        return alpha;
     }
 
-    Score min(vector<GameNode> children, PlayerMarker playerMarker)
+    Score min(vector<GameNode> children, PlayerMarker playerMarker, Score alpha, Score beta)
     {
-        Score minScore = MAX_SCORE;
-        for (const auto &gameNode : children)
+        for (const auto & gameNode : children)
         {
-            Score score = minMax(gameNode, playerMarker);
-            if (score < minScore)
+            const Score score = minMax(gameNode, playerMarker, alpha, beta);
+
+            if (score < beta)
             {
-                minScore = score;
+                beta = score;  // a better best move for opponent
+            }
+
+            if (alpha >= beta)
+            {
+                break;
             }
         }
-        return minScore;
+
+        return beta;
     }
 
     GameNode _root;

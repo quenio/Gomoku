@@ -8,7 +8,7 @@ enum PlayerMarker {
     X, O
 };
 
-inline PlayerMarker adversaryOf(const PlayerMarker & playerMaker)
+inline PlayerMarker opponentOf(const PlayerMarker & playerMaker)
 {
     return playerMaker == X ? O : X;
 }
