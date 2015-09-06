@@ -66,19 +66,32 @@ public:
     {
     }
 
-    GameBoard play(GameBoard &gameBoard)
+    GameBoard play(GameBoard & gameBoard)
     {
-        cout << "Your turn: ";
+        GamePosition position;
+        bool positionInvalid = true;
 
-        string address;
-        cin >> address;
-        cout << endl;
+        while (positionInvalid)
+        {
+            cout << "Your turn: ";
 
+            string address;
+            cin >> address;
+            cout << endl;
 
-        int line = address.size() == 3 ? lineFromChar(address[1]) * 10 + lineFromChar(address[2]) : lineFromChar(address[1]);
-        int column = columnFromChar(address[0]);
+            int line = address.size() == 3 ? lineFromChar(address[1]) * 10 + lineFromChar(address[2]) : lineFromChar(address[1]);
+            int column = columnFromChar(address[0]);
 
-        return gameBoard.play(GamePosition { line - 1, column }, _marker);
+            position = GamePosition { line - 1, column };
+            positionInvalid = not position.valid() or not gameBoard.emptyIn(position);
+
+            if (positionInvalid)
+            {
+                cout << "Position invalid: " << position << endl << endl;
+            }
+        }
+
+        return gameBoard.play(position, _marker);
     }
 
 private:
