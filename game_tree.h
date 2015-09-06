@@ -321,10 +321,11 @@ public:
 
     GamePosition bestPositionFor(const PlayerMarker & playerMarker)
     {
+        const auto children = _root.childrenFor(playerMarker);
+        auto bestPosition = children.front().playedPosition();
         Score maxScore = MIN_SCORE;
-        GamePosition bestPosition;
 
-        for (const auto & gameNode : _root.childrenFor(playerMarker))
+        for (const auto & gameNode : children)
         {
             const Score score = minMax(gameNode, playerMarker, maxScore, MAX_SCORE);
 
