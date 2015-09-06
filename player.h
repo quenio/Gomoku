@@ -42,10 +42,14 @@ public:
     {
     }
 
-    GameBoard play(GameBoard& gameBoard)
+    GameBoard play(GameBoard & gameBoard)
     {
         GameTree gameTree { gameBoard, _skill };
-        GamePosition bestPosition = gameTree.bestPositionFor(_marker);
+
+        const GamePosition bestPosition = gameTree.bestPositionFor(_marker);
+
+        cout << "Position Played: " << bestPosition << endl << endl;
+
         return gameBoard.play(bestPosition, _marker);
     }
 
