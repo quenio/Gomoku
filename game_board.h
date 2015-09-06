@@ -73,7 +73,7 @@ public:
         // Diagonal - Northeast - Inferior
         for (int column = 1; column < COLUMN_COUNT - WINNING_COUNT; column++)
         {
-            auto start = GamePosition { 0, column };
+            auto start = GamePosition { LINE_COUNT - 1, column };
 
             if (victoryFound(start, Northeast, marker))
             {
