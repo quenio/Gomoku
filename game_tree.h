@@ -50,7 +50,7 @@ public:
     {
         if (_gameBoard.hasWinner())
         {
-            return scoreOf(_gameBoard.winner(), WIN);
+            return scoreOf(_gameBoard.winner(), MAX_SCORE);
         }
         else if (_gameBoard.isDraw())
         {
@@ -83,7 +83,7 @@ public:
             cout << "Heuristic Score: " << score << " (" << (WIN - score) << " - " << WIN << ")" << endl << endl;
         }
 
-        if (score > WIN)
+        if (score > MAX_SCORE)
         {
             throw runtime_error { "No sequences may have score higher than winning score." };
         }
@@ -174,13 +174,15 @@ public:
             cout << endl;
         }
 
-        if (seqCount == WINNING_COUNT)
+        if (seqCount == WINNING_COUNT and step >= -2)
         {
             return score; // This direction has some potential.
         }
         else
         {
-            return 0; // There are not enough positions available on this direction to win the game.
+            // There are not enough positions available on this direction to win the game,
+            // or a great chunk of it was using the opposite direction (avoid double-count)
+            return 0;
         }
     }
 

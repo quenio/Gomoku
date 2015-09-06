@@ -37,6 +37,8 @@ constexpr Score EMPTY_POSITION = 5; // An empty position is just a possibility.
 constexpr Score SINGLE_MARK = 6 * EMPTY_POSITION; // A single mark on the game board.
 constexpr Score WIN = fullScoreOf(SINGLE_MARK, WINNING_COUNT); // The game board has a victory.
 
-constexpr Score MAX_SCORE = scoreOf(X, WIN);
-constexpr Score MIN_SCORE = scoreOf(O, WIN);
+constexpr int DIRECTION_COUNT = 8;
+
+constexpr Score MAX_SCORE = scoreOf(X, DIRECTION_COUNT * WIN);
+constexpr Score MIN_SCORE = scoreOf(O, DIRECTION_COUNT * WIN);
 

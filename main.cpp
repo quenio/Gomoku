@@ -6,7 +6,7 @@ int main()
 {
     Game game;
 
-    game.startWithPlayer(game.ai());
+    game.startWithPlayer(game.human());
 
     return 0;
 }
