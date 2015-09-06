@@ -105,6 +105,7 @@ public:
         int seqCount = 1;
         int markerCount = 1; // Considers the marker on the first position.
         int blockedCount = 0;
+        int emptyCount = 0;
 
         Score score = scoreOf(SINGLE_MARK, markerCount);
 
@@ -148,7 +149,11 @@ public:
             else // blocked on this direction - marked positions not found
             {
                 // A blocked line should be worth less than a free one.
-                if (not _gameBoard.emptyIn(current))
+                if (_gameBoard.emptyIn(current))
+                {
+                    score -= scoreOf(EMPTY_POSITION, ++emptyCount);
+                }
+                else
                 {
                     score -= scoreOf(BLOCKED, ++blockedCount);
                 }
