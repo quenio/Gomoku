@@ -338,8 +338,8 @@ public:
             {
                 if (score != 0)
                 {
-                    cout << "Score: " << score << " (max: " << maxScore << ") - " << bestPosition << endl;
-                    cout << "GameNode:" << endl << endl << gameNode << endl << endl;
+                    cout << "GameNode:" << endl <<endl <<  gameNode << endl << endl;
+                    cout << "Score: " << score << " (max: " << maxScore << ") - " << bestPosition << endl << endl;
                 }
             }
         }
@@ -349,7 +349,6 @@ public:
 
 private:
 
-    // TODO Basic implementation of min-max - part 2 will implement alpha/beta
     Score minMax(GameNode node, PlayerMarker playerMarker, Score alpha, Score beta)
     {
         if (DEBUG<MidLevel>::enabled)
@@ -364,6 +363,11 @@ private:
             if (DEBUG<MidLevel>::enabled)
             {
                 cout << "DEBUG: Score: " << score << " (" << alpha << "," << beta << ")" << endl << endl;
+            }
+
+            if (node.isGameOver())
+            {
+                cout << "Game Over - " << score << endl << node << endl;
             }
 
             return score;
@@ -413,7 +417,10 @@ private:
 
             if (alpha >= beta)
             {
-                cout << "max: break" << endl;
+                if (DEBUG<BottomLevel>::enabled)
+                {
+                    cout << "max: break" << endl;
+                }
 
                 break;
             }
@@ -445,7 +452,10 @@ private:
 
             if (alpha >= beta)
             {
-                cout << "min: break" << endl;
+                if (DEBUG<BottomLevel>::enabled)
+                {
+                    cout << "min: break" << endl;
+                }
 
                 break;
             }
