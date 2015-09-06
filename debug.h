@@ -36,6 +36,6 @@ template <> struct DEBUG<HeuristicLevel>
 
 template <> struct DEBUG<HeuristicDetailedLevel>
 {
-    static const bool enabled = false;
+    static const bool enabled = true;
 };
 

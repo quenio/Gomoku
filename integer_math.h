@@ -3,7 +3,13 @@
 #pragma once
 
 template <typename T>
-constexpr T ipow(T base, T exp)
+constexpr T imax(const T & v1, const T & v2)
+{
+    return v1 > v2 ? v1 : v2;
+}
+
+template <typename T>
+constexpr T ipow(T base, int exp)
 {
     T result = 1;
 

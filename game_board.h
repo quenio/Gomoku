@@ -129,12 +129,19 @@ public:
 
     bool positionsMatch(const GamePosition & left, const GamePosition & right) const
     {
-        if (left.valid() and right.valid())
+        if (left.valid() and right.valid() and left != right)
         {
             const GameSlot leftSlot = _slots[left.line()][left.column()];
             const GameSlot rightSlot = _slots[right.line()][right.column()];
 
-            return left != right and leftSlot == rightSlot;
+            if (leftSlot.empty() and rightSlot.empty())
+            {
+                return true; // Should match if both are empty.
+            }
+            else
+            {
+                return leftSlot == rightSlot;
+            }
         }
         else
         {

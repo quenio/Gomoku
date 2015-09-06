@@ -66,21 +66,26 @@ public:
     {
         if (DEBUG<HeuristicLevel>::enabled)
         {
-            cout << "Heuristic of " << _playedPosition << endl;
+            cout << "Heuristic of " << _playedPosition << endl << endl;
         }
 
         Score score = DRAW;
         for (int direction = North; direction <= Northwest; direction++)
         {
-            for (int playerMarker = X; playerMarker <= O; playerMarker++)
-            {
-                score += directionScore(Direction(direction), PlayerMarker(playerMarker));
-            }
+            const Score scoreX = directionScore(Direction(direction), PlayerMarker::X);
+            const Score scoreO = directionScore(Direction(direction), PlayerMarker::O);
+
+            score += imax(scoreX, scoreO);
         }
 
         if (DEBUG<HeuristicLevel>::enabled)
         {
-            cout << "Heuristic Score: " << score << endl << endl;
+            cout << "Heuristic Score: " << score << " (" << (WIN - score) << " - " << WIN << ")" << endl << endl;
+        }
+
+        if (score > WIN)
+        {
+            throw runtime_error { "No sequences may have score higher than winning score." };
         }
 
         return score;
@@ -90,9 +95,12 @@ public:
     {
         int step = 1;
         int seqCount = 1;
+        int markerCount = 1; // Considers the marker on the first position.
+        int emptyCount = 0;
+        int blockedCount = 0;
 
         // Positions will score higher closer to the center.
-        Score score = scoreOf(SINGLE_MARK - _playedPosition.distanceTo(CENTER), seqCount);
+        Score score = scoreOf(SINGLE_MARK - _playedPosition.distanceTo(CENTER), markerCount);
 
         if (DEBUG<HeuristicDetailedLevel>::enabled)
         {
@@ -127,20 +135,20 @@ public:
 
             if (_gameBoard.emptyIn(current))
             {
+                score += scoreOf(EMPTY_POSITION, ++emptyCount); // half-score; just a possibility at this point.
                 step = step > 0 ? step + 1 : step - 1; // Proceed on the same direction.
-                score += scoreOf(EMPTY_POSITION, abs(step)); // half-score; since this position is just a possibility at this point.
                 seqCount++;
             }
             else if (_gameBoard.markedIn(current, marker))
             {
+                score += scoreOf(SINGLE_MARK, ++markerCount); // Full score; position already marked.
                 step = step > 0 ? step + 1 : step - 1; // Proceed on the same direction.
-                score += scoreOf(SINGLE_MARK, abs(step)); // Full score; position already marked.
                 seqCount++;
             }
             else // blocked on this direction
             {
                 // A blocked line should be worth less than a free one.
-                score -= scoreOf(BLOCKED, abs(step) - 1);
+                score -= scoreOf(BLOCKED, ++blockedCount);
 
                 if (step <= 1)
                 {
@@ -154,16 +162,11 @@ public:
                 }
             }
 
-            if (not _gameBoard.positionsMatch(previous, current))
-            {
-                // Intermittent lines score higher because they can be overlooked by the adversary.
-                score += scoreOf(INTERMITTENT, abs(step));
-            }
-
             if (DEBUG<HeuristicDetailedLevel>::enabled)
             {
                 cout << "Score: " << score << " of " << current << endl;
             }
+
         }
 
         if (DEBUG<HeuristicDetailedLevel>::enabled)

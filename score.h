@@ -7,9 +7,9 @@
 
 typedef long Score;
 
-constexpr Score scoreOf(const Score & base, const Score & seqCount)
+constexpr Score scoreOf(const Score & base, const int & seqCount)
 {
-    return ipow(base, seqCount * 2); // Multiplying by 2 so that there is enough room between victory and several 4-count sequences.
+    return ipow(base, seqCount);
 }
 
 constexpr Score scoreOf(const PlayerMarker & playerMarker, const Score & score)
@@ -17,13 +17,25 @@ constexpr Score scoreOf(const PlayerMarker & playerMarker, const Score & score)
     return (playerMarker == X ? +1 : -1) * score;
 }
 
-constexpr Score EMPTY_POSITION = 5; // An empty position is just a possibility.
-constexpr Score SINGLE_MARK = 10; // A single mark on the game board.
-constexpr Score INTERMITTENT = 2; // Intermittent lines score higher because they can be overlooked by the adversary.
-constexpr Score BLOCKED = 2; // A blocked line should be worth less than a free one.
-constexpr Score CLOSER_TO_CENTER = 1; // Positions will score higher closer to the center.
+constexpr Score fullScoreOf(const Score & base, const int & seqCount)
+{
+    int score = 0;
+    int count = seqCount;
+
+    while (count > 0)
+    {
+        score += scoreOf(base, count--);
+    }
+
+    return score;
+}
+
 constexpr Score DRAW = 0; // The game board has come to a draw.
-constexpr Score WIN = scoreOf(SINGLE_MARK, WINNING_COUNT); // The game board has a victory.
+constexpr Score CLOSER_TO_CENTER = 1; // Positions will score higher closer to the center.
+constexpr Score BLOCKED = 2; // A blocked line should be worth less than a free one.
+constexpr Score EMPTY_POSITION = 5; // An empty position is just a possibility.
+constexpr Score SINGLE_MARK = 6 * EMPTY_POSITION; // A single mark on the game board.
+constexpr Score WIN = fullScoreOf(SINGLE_MARK, WINNING_COUNT); // The game board has a victory.
 
 constexpr Score MAX_SCORE = scoreOf(X, WIN);
 constexpr Score MIN_SCORE = scoreOf(O, WIN);
