@@ -32,9 +32,10 @@ constexpr Score fullScoreOf(const Score & base, const int & seqCount)
 
 constexpr Score DRAW = 0; // The game board has come to a draw.
 constexpr Score CLOSER_TO_CENTER = 1; // Positions will score higher closer to the center.
-constexpr Score BLOCKED = 2; // A blocked line should be worth less than a free one.
+constexpr Score EMPTY_BLOCKED = 2; // A blocked line should be worth less than a free one.
+constexpr Score FILLED_BLOCKED = 3; // A truly blocked line should be worth less than a free one.
 constexpr Score EMPTY_POSITION = 5; // An empty position is just a possibility.
-constexpr Score SINGLE_MARK = 6 * EMPTY_POSITION; // A single mark on the game board.
+constexpr Score SINGLE_MARK = 10; // A single mark on the game board.
 constexpr Score WIN = fullScoreOf(SINGLE_MARK, WINNING_COUNT); // The game board has a victory.
 
 constexpr int DIRECTION_COUNT = 8;
