@@ -66,11 +66,6 @@ private:
                 cout << "DEBUG: Score: " << score << " (" << alpha << "," << beta << ")" << endl << endl;
             }
 
-            if (node.isGameOver())
-            {
-                cout << "Game Over - " << score << endl << node << endl;
-            }
-
             return score;
         }
 
