@@ -14,9 +14,10 @@ template <class C> struct DEBUG
     static const bool enabled = false;
 };
 
+// GameTree::bestPositionFor()
 template <> struct DEBUG<TopLevel>
 {
-    static const bool enabled = false;
+    static const bool enabled = true;
 };
 
 template <> struct DEBUG<MidLevel>

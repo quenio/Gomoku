@@ -10,23 +10,37 @@ class GameNode
 {
 public:
 
-    GameNode(const GameBoard & gameBoard): _gameBoard { gameBoard }
+    GameNode(const GameBoard & gameBoard, int level =  0, int distanceToParent = 0):
+        _playedPosition { gameBoard.lastPlayedPosition() },
+        _gameBoard { gameBoard },
+        _level { level },
+        _distanceToParent { distanceToParent }
     {
-    }
-
-    GameNode(const GamePosition & playedPosition, const GameBoard & gameBoard, int level):
-        _playedPosition { playedPosition }, _gameBoard { gameBoard }, _level { level }
-    {
+        if (not _playedPosition.valid())
+        {
+            _playedPosition = CENTER; // If the game board has not been played yet, we start from the center.
+        }
     }
 
     vector<GameNode> childrenFor(const PlayerMarker & playerMarker)
     {
         vector<GameNode> result;
+
         for (const auto & nextPosition : _gameBoard.emptyPositions())
         {
-            GameBoard newGameBoard { _gameBoard.play(nextPosition, playerMarker) };
-            result.push_back(GameNode { nextPosition, newGameBoard, _level + 1 });
+            result.push_back(GameNode
+            {
+                GameBoard { _gameBoard.play(nextPosition, playerMarker) },
+                _level + 1,
+                _playedPosition.distanceTo(nextPosition)
+            });
         }
+
+        sort(result.begin(), result.end(), [](const GameNode & left, const GameNode & right)
+        {
+            return left._distanceToParent < right._distanceToParent;
+        });
+
         return result;
     }
 
@@ -287,15 +301,17 @@ public:
         }
     }
 
+
     int level() const { return _level; }
 
     friend ostream & operator << (ostream &os, const GameNode &gameNode);
 
 private:
 
-    const GamePosition _playedPosition;
-    const GameBoard _gameBoard;
-    const int _level = 0;
+    GamePosition _playedPosition;
+    GameBoard _gameBoard;
+    int _level;
+    int _distanceToParent;
 
 };
 

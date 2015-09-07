@@ -9,6 +9,8 @@ class GameBoard
 {
 public:
 
+    GamePosition lastPlayedPosition() const { return _lastPlayedPosition; }
+
     bool isGameOver() const
     {
         return hasWinner() or emptyPositions().size() == 0;
@@ -166,6 +168,8 @@ public:
 
         newGameBoard._slots[position.line()][position.column()].mark(playerMarker);
 
+        newGameBoard._lastPlayedPosition = position;
+
         return newGameBoard;
     }
 
@@ -256,6 +260,7 @@ private:
     }
 
     GameSlot _slots[LINE_COUNT][COLUMN_COUNT];
+    GamePosition _lastPlayedPosition;
 
 };
 
