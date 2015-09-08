@@ -88,7 +88,10 @@ public:
         {
             const auto direction = Direction(i);
 
-            score += imax(markerScore(direction, playerMarker), mixedScore(direction, playerMarker));
+            score += markerScore(direction, playerMarker);
+            score -= markerScore(direction, opponentOf(playerMarker));
+            score += mixedScore(direction, playerMarker);
+            score -= mixedScore(direction, opponentOf(playerMarker));
         }
 
         if (DEBUG<HeuristicLevel>::enabled)
@@ -190,7 +193,7 @@ public:
 
         if (step >= -2)
         {
-            return score; // This direction has some potential.
+            return scoreOf(marker, score); // This direction has some potential.
         }
         else
         {
@@ -202,19 +205,24 @@ public:
     {
         int step = 1;
         int seqCount = 1;
-        int markerCount = 1; // Considers the marker on the first position.
+        int markerCount = 0;
         int emptyCount = 0;
         int blockedCount = 0;
 
-        // Positions will score higher closer to the center.
-        Score score = scoreOf(SINGLE_MARK - _playedPosition.distanceTo(CENTER), markerCount);
+        Score score = 0;
+        GamePosition previous, current = _playedPosition;
+
+        if (_gameBoard.markedIn(current, marker))
+        {
+            scoreOf(SINGLE_MARK - _playedPosition.distanceTo(CENTER), markerCount); // Positions will score higher closer to the center.
+            markerCount++;
+        }
 
         if (DEBUG<HeuristicDetailedLevel>::enabled)
         {
             cout << "mixedScore - Direction: " << direction << " - " << marker << endl;
         }
 
-        GamePosition previous, current = _playedPosition;
         while (current.valid() and seqCount < WINNING_COUNT)
         {
             if (step >= WINNING_COUNT)
@@ -283,7 +291,7 @@ public:
 
         if (seqCount == WINNING_COUNT and step >= -2)
         {
-            return score; // This direction has some potential.
+            return scoreOf(score, marker); // This direction has some potential.
         }
         else
         {

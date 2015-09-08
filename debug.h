@@ -32,11 +32,11 @@ template <> struct DEBUG<BottomLevel>
 
 template <> struct DEBUG<HeuristicLevel>
 {
-    static const bool enabled = false;
+    static const bool enabled = true;
 };
 
 template <> struct DEBUG<HeuristicDetailedLevel>
 {
-    static const bool enabled = false;
+    static const bool enabled = true;
 };
 
