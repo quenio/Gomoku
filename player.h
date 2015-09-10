@@ -69,9 +69,9 @@ public:
     GameBoard play(GameBoard & gameBoard)
     {
         GamePosition position;
-        bool positionInvalid = true;
+        bool positionInvalid = true, showScore = false;
 
-        while (positionInvalid)
+        while (positionInvalid or showScore)
         {
             cout << "Your turn: ";
 
@@ -79,15 +79,25 @@ public:
             cin >> address;
             cout << endl;
 
-            int line = address.size() == 3 ? lineFromChar(address[1]) * 10 + lineFromChar(address[2]) : lineFromChar(address[1]);
-            int column = columnFromChar(address[0]);
-
-            position = GamePosition { line - 1, column };
-            positionInvalid = not position.valid() or not gameBoard.emptyIn(position);
-
-            if (positionInvalid)
+            showScore = address[0] == 's';
+            if (showScore)
             {
-                cout << "Position invalid: " << position << endl << endl;
+                GameNode node { gameBoard };
+                node.scoreFor(X);
+                cout << endl << endl;
+            }
+            else
+            {
+                int line = address.size() == 3 ? lineFromChar(address[1]) * 10 + lineFromChar(address[2]) : lineFromChar(address[1]);
+                int column = columnFromChar(address[0]);
+
+                position = GamePosition { line - 1, column };
+                positionInvalid = not position.valid() or not gameBoard.emptyIn(position);
+
+                if (positionInvalid)
+                {
+                    cout << "Position invalid: " << position << endl << endl;
+                }
             }
         }
 

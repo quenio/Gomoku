@@ -25,6 +25,7 @@ template <> struct DEBUG<MidLevel>
     static const bool enabled = false;
 };
 
+// GameNode::minMax()
 template <> struct DEBUG<BottomLevel>
 {
     static const bool enabled = false;
@@ -32,11 +33,11 @@ template <> struct DEBUG<BottomLevel>
 
 template <> struct DEBUG<HeuristicLevel>
 {
-    static const bool enabled = true;
+    static const bool enabled = false;
 };
 
 template <> struct DEBUG<HeuristicDetailedLevel>
 {
-    static const bool enabled = true;
+    static const bool enabled = false;
 };
 

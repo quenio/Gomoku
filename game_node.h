@@ -62,9 +62,13 @@ public:
 
     Score utilityScore() const
     {
-        if (_gameBoard.hasWinner())
+        if (_gameBoard.winner() == X)
         {
-            return scoreOf(_gameBoard.winner(), MAX_SCORE);
+            return MAX_SCORE;
+        }
+        else if (_gameBoard.winner() == O)
+        {
+            return MIN_SCORE;
         }
         else if (_gameBoard.isDraw())
         {
@@ -76,27 +80,66 @@ public:
         }
     }
 
-    Score heuristicScore(const PlayerMarker & playerMarker) const
+    Score heuristicScore(const PlayerMarker & marker) const
     {
         if (DEBUG<HeuristicLevel>::enabled)
         {
-            cout << "Heuristic of " << playerMarker << " - " << _playedPosition << endl;
+            cout << "Heuristic of " << marker << " - " << _playedPosition << endl;
         }
 
         Score score = DRAW;
-        for (int i = North; i <= Northwest; i++)
-        {
-            const auto direction = Direction(i);
 
-            score += markerScore(direction, playerMarker);
-            score -= markerScore(direction, opponentOf(playerMarker));
-            score += mixedScore(direction, playerMarker);
-            score -= mixedScore(direction, opponentOf(playerMarker));
+        // Horizontal
+        for (int line = 0; line < LINE_COUNT; line++)
+        {
+            auto start = GamePosition { line, 0 };
+
+            score += directionScore(start, East, marker);
+        }
+
+        // Vertical
+        for (int column = 0; column < COLUMN_COUNT; column++)
+        {
+            auto start = GamePosition { 0, column };
+
+            score += directionScore(start, South, marker);
+        }
+
+        // Diagonal - Northeast - Superior
+        for (int line = WINNING_COUNT - 1; line < LINE_COUNT; line++)
+        {
+            auto start = GamePosition { line, 0 };
+
+            score += directionScore(start, Northeast, marker);
+        }
+
+        // Diagonal - Northeast - Inferior
+        for (int column = 1; column < COLUMN_COUNT - WINNING_COUNT; column++)
+        {
+            auto start = GamePosition { LINE_COUNT - 1, column };
+
+            score += directionScore(start, Northeast, marker);
+        }
+
+        // Diagonal - Southeast - Superior
+        for (int column = 0; column < COLUMN_COUNT - WINNING_COUNT; column++)
+        {
+            auto start = GamePosition { 0, column };
+
+            score += directionScore(start, Southeast, marker);
+        }
+
+        // Diagonal - Southeast - Inferior
+        for (int line = 1; line < LINE_COUNT - WINNING_COUNT; line++)
+        {
+            auto start = GamePosition { line, 0 };
+
+            score += directionScore(start, Southeast, marker);
         }
 
         if (DEBUG<HeuristicLevel>::enabled)
         {
-            cout << "Heuristic Score: " << score << " (" << (WIN - score) << " - " << WIN << ")" << endl;
+            cout << "Heuristic Score: " << score << " (" << MAX_SCORE - abs(score) << " - " << MAX_SCORE << ")" << endl;
         }
 
         if (score > MAX_SCORE)
@@ -104,26 +147,76 @@ public:
             throw runtime_error { "No sequences may have score higher than winning score." };
         }
 
-        return scoreOf(playerMarker, score);
+        return score;
     }
 
-    // TODO Remove duplication between markerScore() and mixedScore()
-    Score markerScore(const Direction &direction, const PlayerMarker &marker) const
+    Score directionScore(const GamePosition & start, const Direction & direction, const PlayerMarker & marker) const
     {
-        int step = 1;
-        int seqCount = 1;
-        int markerCount = 1; // Considers the marker on the first position.
-        int blockedCount = 0;
-        int emptyCount = 0;
+        Score score = DRAW;
 
-        Score score = scoreOf(SINGLE_MARK, markerCount);
+        score += markerScore(start, direction, marker);
+        score += markerScore(start, direction, opponentOf(marker));
+        score += mixedScore(start, direction, marker);
+        score += mixedScore(start, direction, opponentOf(marker));
 
         if (DEBUG<HeuristicDetailedLevel>::enabled)
         {
-            cout << "markerScore - Direction: " << direction << " - " << marker << endl;
+            cout << "directionScore - " << start << " - " << direction << " - " << marker << endl;
         }
 
-        GamePosition previous, current = _playedPosition;
+        cout << "directionScore: " << score << " - " << start << " - " << direction << " - " << marker << endl;
+
+        return score;
+    }
+
+    Score markerScore(GamePosition start, const Direction & direction, const PlayerMarker & marker) const
+    {
+        Score score = DRAW;
+
+        while (start.valid())
+        {
+            GamePosition end;
+            score += markerScore(start, direction, marker, end);
+            start = end;
+        }
+
+        return score;
+    }
+
+    // TODO Remove duplication between markerScore() and mixedScore()
+    Score markerScore(const GamePosition & start, const Direction & direction, const PlayerMarker & marker, GamePosition & end) const
+    {
+        if (DEBUG<HeuristicDetailedLevel>::enabled)
+        {
+            cout << "markerScore - " << start << " - " << direction << " - " << marker << endl;
+        }
+
+        int markerCount = 0;
+        int blockedCount = 0;
+        int emptyCount = 0;
+
+        GamePosition current = findPosition(start, direction, marker);
+
+        Score score = DRAW;
+        if (_gameBoard.markedIn(current, marker))
+        {
+            markerCount++;
+            score += scoreOf(marker, SINGLE_MARK - current.distanceTo(CENTER), markerCount); // Positions will score higher closer to the center.
+        }
+        else
+        {
+            return DRAW;
+        }
+
+        if (DEBUG<HeuristicDetailedLevel>::enabled)
+        {
+            cout << "Score: " << score << " of " << current << endl;
+        }
+
+        int step = 1;
+        int seqCount = 1;
+        GamePosition previous, base = current;
+
         while (current.valid() and seqCount < WINNING_COUNT)
         {
             if (step >= WINNING_COUNT)
@@ -137,7 +230,12 @@ public:
             }
 
             previous = current;
-            current = _playedPosition.neighbor(direction, step);
+            current = base.neighbor(direction, step);
+
+            if (step > 0)
+            {
+                end = current;
+            }
 
             if (previous == current)
             {
@@ -151,7 +249,7 @@ public:
 
             if (_gameBoard.markedIn(current, marker))
             {
-                score += scoreOf(SINGLE_MARK, ++markerCount); // Full score; position already marked.
+                score += scoreOf(marker, SINGLE_MARK, ++markerCount); // Full score; position already marked.
                 step = step > 0 ? step + 1 : step - 1; // Proceed on the same direction.
                 seqCount++;
             }
@@ -160,17 +258,18 @@ public:
                 // A blocked line should be worth less than a free one.
                 if (_gameBoard.emptyIn(current))
                 {
-                    score -= scoreOf(EMPTY_BLOCKED, (++emptyCount + markerCount));
+                    score += scoreOf(marker, EMPTY_POSITION, (++emptyCount + markerCount));
+                    seqCount++;
                 }
                 else
                 {
-                    score -= scoreOf(FILLED_BLOCKED, (++blockedCount + markerCount));
+                    score += scoreOf(opponentOf(marker), BLOCKED, (++blockedCount + markerCount));
                 }
 
                 if (step <= 1)
                 {
                     // Already blocked on the immediate neighbor, or on the opposite direction; giving up on this direction.
-                    previous = current = INVALID_POSITION;
+                    current = INVALID_POSITION;
                 }
                 else if (step > 1)
                 {
@@ -186,42 +285,65 @@ public:
 
         }
 
+        if (step < -2)
+        {
+            score = DRAW; // A good chunk of this sequence was in the opposite direction (avoid double-count)
+        }
+
         if (DEBUG<HeuristicDetailedLevel>::enabled)
         {
-            cout << endl;
+            cout << "Final score: " << score << " of " << current << endl << endl;
         }
 
-        if (step >= -2)
-        {
-            return scoreOf(marker, score); // This direction has some potential.
-        }
-        else
-        {
-            return 0; // A good chunk of this sequence was in the opposite direction (avoid double-count)
-        }
+        return score;
     }
 
-    Score mixedScore(const Direction &direction, const PlayerMarker &marker) const
+    Score mixedScore(GamePosition start, const Direction & direction, const PlayerMarker & marker) const
     {
-        int step = 1;
-        int seqCount = 1;
+        Score score = DRAW;
+
+        while (start.valid())
+        {
+            GamePosition end;
+            score += mixedScore(start, direction, marker, end);
+            start = end;
+        }
+
+        return score;
+    }
+
+    Score mixedScore(const GamePosition & start, const Direction & direction, const PlayerMarker & marker, GamePosition & end) const
+    {
+        if (DEBUG<HeuristicDetailedLevel>::enabled)
+        {
+            cout << "mixedScore - " << start << " - " << direction << " - " << marker << endl;
+        }
+
         int markerCount = 0;
         int emptyCount = 0;
         int blockedCount = 0;
 
-        Score score = 0;
-        GamePosition previous, current = _playedPosition;
+        GamePosition current = findPosition(start, direction, marker);
 
+        Score score = DRAW;
         if (_gameBoard.markedIn(current, marker))
         {
-            scoreOf(SINGLE_MARK - _playedPosition.distanceTo(CENTER), markerCount); // Positions will score higher closer to the center.
             markerCount++;
+            score += scoreOf(marker, SINGLE_MARK - current.distanceTo(CENTER), markerCount); // Positions will score higher closer to the center.
+        }
+        else
+        {
+            return DRAW;
         }
 
         if (DEBUG<HeuristicDetailedLevel>::enabled)
         {
-            cout << "mixedScore - Direction: " << direction << " - " << marker << endl;
+            cout << "Score: " << score << " of " << current << endl;
         }
+
+        int step = 1;
+        int seqCount = 1;
+        GamePosition previous, base = current;
 
         while (current.valid() and seqCount < WINNING_COUNT)
         {
@@ -236,7 +358,12 @@ public:
             }
 
             previous = current;
-            current = _playedPosition.neighbor(direction, step);
+            current = base.neighbor(direction, step);
+
+            if (step > 0)
+            {
+                end = current;
+            }
 
             if (previous == current)
             {
@@ -250,25 +377,31 @@ public:
 
             if (_gameBoard.emptyIn(current))
             {
-                score += scoreOf(EMPTY_POSITION, (++emptyCount + markerCount)); // half-score; just a possibility at this point.
+                if (_gameBoard.emptyIn(previous))
+                {
+                    // Do not count two subsequent empty spaces.
+                    current = INVALID_POSITION;
+                }
+
+                score += scoreOf(marker, EMPTY_POSITION, (++emptyCount + markerCount)); // half-score; just a possibility at this point.
                 step = step > 0 ? step + 1 : step - 1; // Proceed on the same direction.
                 seqCount++;
             }
             else if (_gameBoard.markedIn(current, marker))
             {
-                score += scoreOf(SINGLE_MARK, ++markerCount); // Full score; position already marked.
+                score += scoreOf(marker, SINGLE_MARK, ++markerCount); // Full score; position already marked.
                 step = step > 0 ? step + 1 : step - 1; // Proceed on the same direction.
                 seqCount++;
             }
             else // blocked on this direction
             {
-                // A blocked line should be worth less than a free one.
-                score -= scoreOf(FILLED_BLOCKED, (++blockedCount + markerCount));
+                // A blocked line should be worth less than an open one.
+                score += scoreOf(opponentOf(marker), BLOCKED, (++blockedCount + markerCount));
 
                 if (step <= 1)
                 {
                     // Already blocked on the immediate neighbor, or on the opposite direction; giving up on this direction.
-                    previous = current = INVALID_POSITION;
+                    current = INVALID_POSITION;
                 }
                 else if (step > 1)
                 {
@@ -284,23 +417,32 @@ public:
 
         }
 
-        if (DEBUG<HeuristicDetailedLevel>::enabled)
-        {
-            cout << endl;
-        }
-
-        if (seqCount == WINNING_COUNT and step >= -2)
-        {
-            return scoreOf(score, marker); // This direction has some potential.
-        }
-        else
+        if (seqCount != WINNING_COUNT or step < -2)
         {
             // There are not enough positions available on this direction to win the game,
             // or a great chunk of it was using the opposite direction (avoid double-count)
-            return 0;
+            score = DRAW;
         }
+
+        if (DEBUG<HeuristicDetailedLevel>::enabled)
+        {
+            cout << "Final score: " << score << " of " << current << endl << endl;
+        }
+
+        return score;
     }
 
+    GamePosition findPosition(const GamePosition & start, const Direction & direction, const PlayerMarker & marker) const
+    {
+        GamePosition current = start;
+
+        while (current.valid() and not _gameBoard.markedIn(current, marker))
+        {
+            current = current.neighbor(direction, 1);
+        }
+
+        return current;
+    }
 
     int level() const { return _level; }
 
