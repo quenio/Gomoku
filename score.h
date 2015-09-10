@@ -29,8 +29,8 @@ constexpr Score DRAW = 0; // The game board has come to a draw.
 constexpr Score CLOSER_TO_CENTER = 1; // Positions will score higher closer to the center.
 constexpr Score EMPTY_POSITION = 2; // An empty position is just a possibility.
 constexpr Score SINGLE_MARK = 10; // A single mark on the game board.
-constexpr Score BLOCKED = 4; // A blocked line should neutralize the effect of the opponent's sequence.
+constexpr Score BLOCKED = 6; // A blocked line should neutralize the effect of the opponent's sequence.
 
-constexpr Score MAX_SCORE = fullScoreOf(X, SINGLE_MARK, WINNING_COUNT);
-constexpr Score MIN_SCORE = fullScoreOf(O, SINGLE_MARK, WINNING_COUNT);
+constexpr Score MAX_SCORE = fullScoreOf(X, SINGLE_MARK, WINNING_COUNT + 1);
+constexpr Score MIN_SCORE = fullScoreOf(O, SINGLE_MARK, WINNING_COUNT + 1);
 
