@@ -161,10 +161,8 @@ public:
 
         if (DEBUG<HeuristicDetailedLevel>::enabled)
         {
-            cout << "directionScore - " << start << " - " << direction << " - " << marker << endl;
+            cout << "directionScore: " << score << " - " << start << " - " << direction << " - " << marker << endl;
         }
-
-        cout << "directionScore: " << score << " - " << start << " - " << direction << " - " << marker << endl;
 
         return score;
     }

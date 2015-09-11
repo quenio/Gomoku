@@ -81,7 +81,7 @@ private:
         }
     }
 
-    shared_ptr<Player> _ai { new AIPlayer { Naive } };
+    shared_ptr<Player> _ai { new AIPlayer { Novice } };
     shared_ptr<Player> _human { new HumanPlayer };
     shared_ptr<Player> _currentPlayer;
 
