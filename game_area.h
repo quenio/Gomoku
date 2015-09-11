@@ -2,13 +2,16 @@
 
 #pragma once
 
+static constexpr int LINE_COUNT = 15;
+static constexpr int COLUMN_COUNT = 15;
+
 class GameArea
 {
 public:
 
     GameArea(int startLine, int startColumn, int endLine, int endColumn):
-        _startLine { startLine }, _startColumn { startColumn },
-        _endLine { endLine }, _endColumn { endColumn }
+        _startLine { imax(0, startLine) }, _startColumn { imax(0, startColumn) },
+        _endLine { imin(endLine, LINE_COUNT - 1) }, _endColumn { imin(endColumn, COLUMN_COUNT - 1) }
     {
     }
 
@@ -28,17 +31,23 @@ public:
 
     int slotCount() const { return width() * height(); }
 
+    friend ostream & operator << (ostream & os, const GameArea & area);
+
 private:
 
-    const int _startLine, _startColumn, _endLine, _endColumn;
+    int _startLine, _startColumn, _endLine, _endColumn;
 
 };
 
-static constexpr int LINE_COUNT = 15;
-static constexpr int COLUMN_COUNT = 15;
-
 static constexpr int WINNING_COUNT = 5;
+static constexpr int FOCUS_LENGTH = 7;
 
 static const GameArea FULL_BOARD { 0, 0, LINE_COUNT - 1, COLUMN_COUNT - 1 };
-static const GameArea CENTRAL_AREA { WINNING_COUNT + 1, WINNING_COUNT };
+static const GameArea CENTRAL_AREA { 3, FOCUS_LENGTH };
 
+inline ostream & operator << (ostream & os, const GameArea & area)
+{
+    os << "(" << area._startLine << "," << area._startColumn << "," << area._endLine << "," << area._endColumn << ")";
+
+    return os;
+}

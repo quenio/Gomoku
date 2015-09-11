@@ -44,7 +44,9 @@ public:
 
     GameBoard play(GameBoard & gameBoard)
     {
-        GameTree gameTree { gameBoard, _skill };
+        checkAndSetFocus(gameBoard.lastPlayedPosition());
+
+        GameTree gameTree { gameBoard, focus, _skill };
 
         const GamePosition bestPosition = gameTree.bestPositionFor(_marker);
 
@@ -55,7 +57,19 @@ public:
 
 private:
 
+    void checkAndSetFocus(const GamePosition & lastPlayedPosition)
+    {
+        if (not lastPlayedPosition.in(focus))
+        {
+            int startLine = lastPlayedPosition.line() / 2;
+            int startColumn = lastPlayedPosition.column() / 2;
+            focus = GameArea { startLine, startColumn, startLine + FOCUS_LENGTH, startColumn + FOCUS_LENGTH };
+            cout << "NEW FOCUS: " << focus << endl;
+        }
+    }
+
     const PlayerSkill _skill;
+    GameArea focus { CENTRAL_AREA };
 };
 
 class HumanPlayer: public Player

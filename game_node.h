@@ -22,11 +22,11 @@ public:
         }
     }
 
-    vector<GameNode> childrenFor(const PlayerMarker & playerMarker)
+    vector<GameNode> childrenFor(const PlayerMarker & playerMarker, const GameArea & focus)
     {
         vector<GameNode> result;
 
-        for (const auto & nextPosition : _gameBoard.emptyPositions())
+        for (const auto & nextPosition : _gameBoard.emptyPositions(focus))
         {
             result.push_back(GameNode
                                  {
@@ -81,7 +81,10 @@ public:
             throw runtime_error { "The utility score can only be calculated when the game board is terminal." };
         }
 
-        cout << "utilityScore = " << score << " - " << _playedPosition << " - " << _distanceToParent << endl;
+        if (DEBUG<HeuristicLevel>::enabled)
+        {
+            cout << "utilityScore = " << score << " - " << _playedPosition << " - " << _distanceToParent << endl;
+        }
 
         return score;
     }

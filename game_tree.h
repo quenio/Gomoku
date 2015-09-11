@@ -7,14 +7,14 @@
 class GameTree {
 public:
 
-    GameTree(const GameBoard & currentBoard, const int deepestLevel):
-        _root { GameNode { currentBoard }  }, _deepestLevel { deepestLevel }
+    GameTree(const GameBoard & currentBoard, const GameArea & focus, const int deepestLevel):
+        _root { GameNode { currentBoard }  }, _focus { focus }, _deepestLevel { deepestLevel }
     {
     }
 
     GamePosition bestPositionFor(const PlayerMarker & playerMarker)
     {
-        const auto children = _root.childrenFor(playerMarker);
+        const auto children = _root.childrenFor(playerMarker, _focus);
         auto bestPosition = children.front().playedPosition();
         Score maxScore = MIN_SCORE;
 
@@ -70,7 +70,7 @@ private:
         }
 
         const PlayerMarker opponent = opponentOf(playerMarker);
-        const vector<GameNode> children = node.childrenFor(opponent);
+        const vector<GameNode> children = node.childrenFor(opponent, _focus);
 
         if (DEBUG<BottomLevel>::enabled)
         {
@@ -166,6 +166,6 @@ private:
     }
 
     GameNode _root;
+    GameArea _focus;
     int _deepestLevel;
-
 };

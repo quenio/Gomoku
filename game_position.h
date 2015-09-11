@@ -115,6 +115,7 @@ private:
 
 static const GamePosition INVALID_POSITION;
 static const GamePosition CENTER { 7, 7 };
+static const GamePosition ORIGIN { 0, 0 };
 
 inline ostream & operator << (ostream &os, const GamePosition &position)
 {
