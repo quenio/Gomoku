@@ -62,22 +62,28 @@ public:
 
     Score utilityScore() const
     {
+        Score score;
+
         if (_gameBoard.winner() == X)
         {
-            return MAX_SCORE;
+            score = MAX_SCORE - _level; // The sooner the victory, the better
         }
         else if (_gameBoard.winner() == O)
         {
-            return MIN_SCORE;
+            score = MIN_SCORE + _level; // The later the loss, the better
         }
         else if (_gameBoard.isDraw())
         {
-            return DRAW;
+            score = DRAW + _level; // The later the draw, the better
         }
         else
         {
             throw runtime_error { "The utility score can only be calculated when the game board is terminal." };
         }
+
+        cout << "utilityScore = " << score << " - " << _playedPosition << " - " << _distanceToParent << endl;
+
+        return score;
     }
 
     Score heuristicScore(const PlayerMarker & marker) const
