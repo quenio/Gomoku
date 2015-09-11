@@ -81,7 +81,7 @@ private:
         }
     }
 
-    shared_ptr<Player> _ai { new AIPlayer { Medium } };
+    shared_ptr<Player> _ai { new AIPlayer { Expert } };
     shared_ptr<Player> _human { new HumanPlayer };
     shared_ptr<Player> _currentPlayer;
 

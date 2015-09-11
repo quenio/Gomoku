@@ -40,7 +40,7 @@ private:
 };
 
 static constexpr int WINNING_COUNT = 5;
-static constexpr int FOCUS_LENGTH = 7;
+static constexpr int FOCUS_LENGTH = 5;
 
 static const GameArea FULL_BOARD { 0, 0, LINE_COUNT - 1, COLUMN_COUNT - 1 };
 static const GameArea CENTRAL_AREA { 3, FOCUS_LENGTH };

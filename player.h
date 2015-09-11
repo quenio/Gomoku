@@ -59,10 +59,10 @@ private:
 
     void checkAndSetFocus(const GamePosition & lastPlayedPosition)
     {
-        if (not lastPlayedPosition.in(focus))
+        if (not lastPlayedPosition.in(focus) or lastPlayedPosition.onFrontierOf(focus))
         {
-            int startLine = lastPlayedPosition.line() / 2;
-            int startColumn = lastPlayedPosition.column() / 2;
+            int startLine = lastPlayedPosition.line() - FOCUS_LENGTH / 2;
+            int startColumn = lastPlayedPosition.column() - FOCUS_LENGTH / 2;
             focus = GameArea { startLine, startColumn, startLine + FOCUS_LENGTH, startColumn + FOCUS_LENGTH };
             cout << "NEW FOCUS: " << focus << endl;
         }

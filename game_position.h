@@ -29,6 +29,12 @@ public:
                _column >= area.startColumn() and _column <= area.endLine();
     }
 
+    bool onFrontierOf(const GameArea & area) const
+    {
+        return _line == area.startLine() or _line == area.endLine() or
+               _column == area.startColumn() or _column == area.endLine();
+    }
+
     int distanceTo(const GamePosition & position) const
     {
         const int verticalDistance = abs(_line - position._line);
