@@ -64,3 +64,27 @@ A pontuação de cada sequência relevante é baseada nas táticas do jogo. Em v
 _ Sequências de _dois_ e marcadores "solitários" são significativamente menos valiosos que as sequências acima.
 
 Para se evitar que o somátorio de um grande número de sequências menos valiosas resulte em uma pontuação maior que um pequeno somatório de sequências mais valiosas, utilizou-se uma função exponencial para definir a pontuação de cada sequência tática. O expoente representa o comprimento da sequência encontrada e a base representa o estado da célula, sendo uma célula marcada mais valiosa que uma célula vazia.
+
+## Otimizações
+
+Visto que a busca do MinMax é cara num tabuleiro 15x15, devido ao tamanho da árvore gerada para todos os estados do jogo, foi necessário implementar algumas otimizações que permitiram diminuir a árvore de busca, tornando o tempo de execução com quatro níveis mais razoável.
+
+### Podas com Alpha & Beta
+
+O algoritmo MinMax que mantém valores de alpha e beta para cada nó permite que ramos inteiros da árvore de busca possam ser ignorados, pois estes não poderiam trazer resultados melhores do que já se alcançou com os ramos já pesquisados.
+
+A implementação melhorou substancialmente o desempenho do MinMax com dois ou três níveis de busca, mas não foi suficiente para melhorar o desempenho da busca de três níveis.
+
+### Foco em Áreas do Tabuleiro
+
+Outra otimização que foi necessária foi diminuir a amplitude da árvore de busca. Para que o número de nós-filho gerados para cada nó-pai fosse significativamente menor, e assim diminuir o tamanho da árvoce de busca, usou-se a classe `GameArea` para definir uma área menor do tabuleiro onde o computador deveria focar em cada jogada.
+
+Ao iniciar o jogo, a área de foco é a área central do tabuleiro, pois ainda não exitem células marcadas. Porém, a classe `AIPlayer` vai continuamente verificando o local da última jogada do adversário e vai ajustando a área de foco para que esteja em volta da última jogada.
+
+Observou-se que, com uma área de foco 6x6, consegue-se um desempenho razoável do MinMax e ainda assim o computador é capaz de "perceber" as jogadas mais relevantes na maior parte do tempo. Porém, com uma área de foco menor, apesar de um desempenho ainda melhor do MinMax, o computador começa a ter um desempenho tático pior, pois deixa de ver muitas jogadas.
+
+### Ordenação dos Nós de Busca
+
+Ainda outra otimização realizada foi a ordenação dos nós-filho de tal forma que as jogadas que estão mais perto da última jogada do adversário sejam avaliadas primeiro.
+
+Esta otimização permitiu ao MinMax avaliar as podas a partir das jogadas mais relevantes e assim acelerou o processo de poda.
