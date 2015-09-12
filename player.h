@@ -94,7 +94,7 @@ public:
 
         while (positionInvalid or showScore)
         {
-            cout << "Your turn: ";
+            cout << "Your turn (ex.: A12): ";
 
             string address;
             cin >> address;
