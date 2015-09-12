@@ -32,7 +32,7 @@ O tipo `Score` - que é simplemente um apelido de `long` na imlementação atual
 ## Métodos Principais
 
 As classes descritas acima possuem alguns métodos chave que orientam a execução do jogo:
-- `void Game::startWithPlayer(player)` inicia o jogo e executa o "loop" que alterna entre as jogadas entre os jogadores.
+- `void Game::start()` inicia o jogo e executa o "loop" que alterna entre as jogadas entre os jogadores.
 - `GameBoard Player::play(gameBoard)` executa uma jogada de um dos jogadores. É um método polimórfico com implementação nas sub-classes `AIPlayer` e `HumanPlayer`, de acordo com sua funções. Ele recebe o estado atual do tabuleiro em uma instância de `GameBoard` e retorna o novo estado do jogo em uma nova instância de `GameBoard` que já contém a nova jogada.
 - `GamePosition GameTree::bestPositionFor(playerMarker)` é executada por `AIPLayer` para descobrir qual é a melhor jogada baseada no estado atual do tabuleiro. Este método implementa o primeiro nível "max" do algoritmo MinMax, guardando a posição a ser jogada cada vez que encontra um valor máximo.
 - `Score GameTree::minMax(gameNode, playerMarker, alpha, beta)` implementa o algoritmo MinMax com podas alpha-beta. Também retorna o `Score` de um nó quando atinge uma folha da árvore do jogo. É chamado pelo método `bestPositionFor()` descrito acima.

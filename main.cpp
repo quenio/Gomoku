@@ -5,8 +5,6 @@
 int main()
 {
     Game game;
-
-    game.startWithPlayer(game.human());
-
+    game.start();
     return 0;
 }

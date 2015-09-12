@@ -8,15 +8,11 @@ class Game
 {
 public:
 
-    shared_ptr<Player> ai() { return _ai; }
-
-    shared_ptr<Player> human() { return _human; }
-
-    void startWithPlayer(shared_ptr<Player> initialPlayer)
+    void start()
     {
-        resetGame(initialPlayer);
         displayGameStarted();
         chooseSkillLevel();
+        choosePlayerToStart();
         displayInitialBoard();
         while (inProgress())
         {
@@ -94,13 +90,50 @@ private:
         cout << "2 - Medium (depth = 2)" << endl;
         cout << "3 - Expert (depth = 3)" << endl;
         cout << "4 - Master (depth = 4)" << endl << endl;
-        cout << "Choose the skill level: " << endl;
 
-        int skillLevel;
-        cin >> skillLevel;
-        cout << endl;
+        int skillLevel = 0;
+        while (skillLevel < Novice or skillLevel > Master)
+        {
+            cout << "Choose the skill level: ";
+            cin >> skillLevel;
+            cout << endl;
 
-        _ai = shared_ptr<Player> { new AIPlayer { PlayerSkill(skillLevel) } };
+            if (skillLevel >= Novice and skillLevel <= Master)
+            {
+                _ai = shared_ptr<Player> { new AIPlayer { PlayerSkill(skillLevel) } };
+            }
+            else
+            {
+                cout << "Invalid skill level: " << skillLevel << endl << endl;
+            }
+        }
+    }
+
+    void choosePlayerToStart()
+    {
+        cout << "1 - Computer" << endl;
+        cout << "2 - User" << endl << endl;
+
+        int player = 0;
+        while (player < 1 or player > 2)
+        {
+            cout << "Choose the player to start: ";
+            cin >> player;
+            cout << endl;
+
+            if (player == 1)
+            {
+                resetGame(_ai);
+            }
+            else if (player == 2)
+            {
+                resetGame(_human);
+            }
+            else
+            {
+                cout << "Invalid player: " << player << endl << endl;
+            }
+        }
     }
 
     shared_ptr<Player> _ai { new AIPlayer { Novice } };
