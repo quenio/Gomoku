@@ -33,12 +33,13 @@ bool operator == (Player & lhs, Player & rhs)
     return lhs._marker == rhs._marker;
 }
 
+// The associated number matches the depth on the MinMax search.
 enum PlayerSkill
 {
-    Novice = 1, // two levels on search - first level has index one
-    Medium = 2, // three levels
-    Expert = 3, // four levels
-    Master = 4  // five levels
+    Novice = 1, // depth = 1; root node is depth = 0
+    Medium = 2, // depth = 2
+    Expert = 3, // depth = 3
+    Master = 4  // depth = 4
 };
 
 class AIPlayer: public Player

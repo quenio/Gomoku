@@ -16,6 +16,8 @@ public:
     {
         resetGame(initialPlayer);
         displayGameStarted();
+        chooseSkillLevel();
+        displayInitialBoard();
         while (inProgress())
         {
             doPlay();
@@ -57,7 +59,12 @@ private:
 
     void displayGameStarted()
     {
-        cout << "Gamed Started!" << endl << endl << _initialBoard << endl;
+        cout << "Gamed Started!" << endl << endl;
+    }
+
+    void displayInitialBoard()
+    {
+        cout << _initialBoard << endl;
     }
 
     void displayCurrentPlay()
@@ -81,7 +88,22 @@ private:
         }
     }
 
-    shared_ptr<Player> _ai { new AIPlayer { Master } };
+    void chooseSkillLevel()
+    {
+        cout << "1 - Novice (depth = 1 on MinMax search)" << endl;
+        cout << "2 - Medium (depth = 2)" << endl;
+        cout << "3 - Expert (depth = 3)" << endl;
+        cout << "4 - Master (depth = 4)" << endl << endl;
+        cout << "Choose the skill level: " << endl;
+
+        int skillLevel;
+        cin >> skillLevel;
+        cout << endl;
+
+        _ai = shared_ptr<Player> { new AIPlayer { PlayerSkill(skillLevel) } };
+    }
+
+    shared_ptr<Player> _ai { new AIPlayer { Novice } };
     shared_ptr<Player> _human { new HumanPlayer };
     shared_ptr<Player> _currentPlayer;
 
