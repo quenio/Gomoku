@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html>
+  <head>
+      <meta charset="utf-8" />
+      <title>relatorio-2</title>
+      <style>.markdown-preview, .markdown-preview[data-use-github-style] { font-family: 'Helvetica Neue', Helvetica, 'Segoe UI', Arial, freesans, sans-serif; font-size: 16px; line-height: 1.6; word-wrap: break-word; overflow: scroll; box-sizing: border-box; padding: 20px; background-color: rgb(255, 255, 255); }
+.markdown-preview > :first-child, .markdown-preview[data-use-github-style] > :first-child { margin-top: 0px !important; }
+.markdown-preview > :last-child, .markdown-preview[data-use-github-style] > :last-child { margin-bottom: 0px !important; }
+.markdown-preview a:not([href]), .markdown-preview[data-use-github-style] a:not([href]) { color: inherit; text-decoration: none; }
+.markdown-preview .absent, .markdown-preview[data-use-github-style] .absent { color: rgb(204, 0, 0); }
+.markdown-preview .anchor, .markdown-preview[data-use-github-style] .anchor { position: absolute; top: 0px; left: 0px; display: block; padding-right: 6px; padding-left: 30px; margin-left: -30px; }
+.markdown-preview .anchor:focus, .markdown-preview[data-use-github-style] .anchor:focus { outline: none; }
+.markdown-preview h1, .markdown-preview[data-use-github-style] h1, .markdown-preview h2, .markdown-preview[data-use-github-style] h2, .markdown-preview h3, .markdown-preview[data-use-github-style] h3, .markdown-preview h4, .markdown-preview[data-use-github-style] h4, .markdown-preview h5, .markdown-preview[data-use-github-style] h5, .markdown-preview h6, .markdown-preview[data-use-github-style] h6 { position: relative; margin-top: 1em; margin-bottom: 16px; font-weight: bold; line-height: 1.4; }
+.markdown-preview h1 .octicon-link, .markdown-preview[data-use-github-style] h1 .octicon-link, .markdown-preview h2 .octicon-link, .markdown-preview[data-use-github-style] h2 .octicon-link, .markdown-preview h3 .octicon-link, .markdown-preview[data-use-github-style] h3 .octicon-link, .markdown-preview h4 .octicon-link, .markdown-preview[data-use-github-style] h4 .octicon-link, .markdown-preview h5 .octicon-link, .markdown-preview[data-use-github-style] h5 .octicon-link, .markdown-preview h6 .octicon-link, .markdown-preview[data-use-github-style] h6 .octicon-link { display: none; color: rgb(0, 0, 0); vertical-align: middle; }
+.markdown-preview h1:hover .anchor, .markdown-preview[data-use-github-style] h1:hover .anchor, .markdown-preview h2:hover .anchor, .markdown-preview[data-use-github-style] h2:hover .anchor, .markdown-preview h3:hover .anchor, .markdown-preview[data-use-github-style] h3:hover .anchor, .markdown-preview h4:hover .anchor, .markdown-preview[data-use-github-style] h4:hover .anchor, .markdown-preview h5:hover .anchor, .markdown-preview[data-use-github-style] h5:hover .anchor, .markdown-preview h6:hover .anchor, .markdown-preview[data-use-github-style] h6:hover .anchor { padding-left: 8px; margin-left: -30px; text-decoration: none; }
+.markdown-preview h1:hover .anchor .octicon-link, .markdown-preview[data-use-github-style] h1:hover .anchor .octicon-link, .markdown-preview h2:hover .anchor .octicon-link, .markdown-preview[data-use-github-style] h2:hover .anchor .octicon-link, .markdown-preview h3:hover .anchor .octicon-link, .markdown-preview[data-use-github-style] h3:hover .anchor .octicon-link, .markdown-preview h4:hover .anchor .octicon-link, .markdown-preview[data-use-github-style] h4:hover .anchor .octicon-link, .markdown-preview h5:hover .anchor .octicon-link, .markdown-preview[data-use-github-style] h5:hover .anchor .octicon-link, .markdown-preview h6:hover .anchor .octicon-link, .markdown-preview[data-use-github-style] h6:hover .anchor .octicon-link { display: inline-block; }
+.markdown-preview h1 tt, .markdown-preview[data-use-github-style] h1 tt, .markdown-preview h2 tt, .markdown-preview[data-use-github-style] h2 tt, .markdown-preview h3 tt, .markdown-preview[data-use-github-style] h3 tt, .markdown-preview h4 tt, .markdown-preview[data-use-github-style] h4 tt, .markdown-preview h5 tt, .markdown-preview[data-use-github-style] h5 tt, .markdown-preview h6 tt, .markdown-preview[data-use-github-style] h6 tt, .markdown-preview h1 code, .markdown-preview[data-use-github-style] h1 code, .markdown-preview h2 code, .markdown-preview[data-use-github-style] h2 code, .markdown-preview h3 code, .markdown-preview[data-use-github-style] h3 code, .markdown-preview h4 code, .markdown-preview[data-use-github-style] h4 code, .markdown-preview h5 code, .markdown-preview[data-use-github-style] h5 code, .markdown-preview h6 code, .markdown-preview[data-use-github-style] h6 code { font-size: inherit; }
+.markdown-preview h1, .markdown-preview[data-use-github-style] h1 { padding-bottom: 0.3em; font-size: 2.25em; line-height: 1.2; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: rgb(238, 238, 238); }
+.markdown-preview h1 .anchor, .markdown-preview[data-use-github-style] h1 .anchor { line-height: 1; }
+.markdown-preview h2, .markdown-preview[data-use-github-style] h2 { padding-bottom: 0.3em; font-size: 1.75em; line-height: 1.225; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: rgb(238, 238, 238); }
+.markdown-preview h2 .anchor, .markdown-preview[data-use-github-style] h2 .anchor { line-height: 1; }
+.markdown-preview h3, .markdown-preview[data-use-github-style] h3 { font-size: 1.5em; line-height: 1.43; }
+.markdown-preview h3 .anchor, .markdown-preview[data-use-github-style] h3 .anchor { line-height: 1.2; }
+.markdown-preview h4, .markdown-preview[data-use-github-style] h4 { font-size: 1.25em; }
+.markdown-preview h4 .anchor, .markdown-preview[data-use-github-style] h4 .anchor { line-height: 1.2; }
+.markdown-preview h5, .markdown-preview[data-use-github-style] h5 { font-size: 1em; }
+.markdown-preview h5 .anchor, .markdown-preview[data-use-github-style] h5 .anchor { line-height: 1.1; }
+.markdown-preview h6, .markdown-preview[data-use-github-style] h6 { font-size: 1em; color: rgb(119, 119, 119); }
+.markdown-preview h6 .anchor, .markdown-preview[data-use-github-style] h6 .anchor { line-height: 1.1; }
+.markdown-preview p, .markdown-preview[data-use-github-style] p, .markdown-preview blockquote, .markdown-preview[data-use-github-style] blockquote, .markdown-preview ul, .markdown-preview[data-use-github-style] ul, .markdown-preview ol, .markdown-preview[data-use-github-style] ol, .markdown-preview dl, .markdown-preview[data-use-github-style] dl, .markdown-preview table, .markdown-preview[data-use-github-style] table, .markdown-preview pre, .markdown-preview[data-use-github-style] pre { margin-top: 0px; margin-bottom: 16px; }
+.markdown-preview hr, .markdown-preview[data-use-github-style] hr { height: 4px; padding: 0px; margin: 16px 0px; border: 0px none; background-color: rgb(231, 231, 231); }
+.markdown-preview ul, .markdown-preview[data-use-github-style] ul, .markdown-preview ol, .markdown-preview[data-use-github-style] ol { padding-left: 2em; }
+.markdown-preview ul.no-list, .markdown-preview[data-use-github-style] ul.no-list, .markdown-preview ol.no-list, .markdown-preview[data-use-github-style] ol.no-list { padding: 0px; list-style-type: none; }
+.markdown-preview ul ul, .markdown-preview[data-use-github-style] ul ul, .markdown-preview ul ol, .markdown-preview[data-use-github-style] ul ol, .markdown-preview ol ol, .markdown-preview[data-use-github-style] ol ol, .markdown-preview ol ul, .markdown-preview[data-use-github-style] ol ul { margin-top: 0px; margin-bottom: 0px; }
+.markdown-preview li > p, .markdown-preview[data-use-github-style] li > p { margin-top: 16px; }
+.markdown-preview dl, .markdown-preview[data-use-github-style] dl { padding: 0px; }
+.markdown-preview dl dt, .markdown-preview[data-use-github-style] dl dt { padding: 0px; margin-top: 16px; font-size: 1em; font-style: italic; font-weight: bold; }
+.markdown-preview dl dd, .markdown-preview[data-use-github-style] dl dd { padding: 0px 16px; margin-bottom: 16px; }
+.markdown-preview blockquote, .markdown-preview[data-use-github-style] blockquote { padding: 0px 15px; color: rgb(119, 119, 119); border-left-width: 4px; border-left-style: solid; border-left-color: rgb(221, 221, 221); }
+.markdown-preview blockquote > :first-child, .markdown-preview[data-use-github-style] blockquote > :first-child { margin-top: 0px; }
+.markdown-preview blockquote > :last-child, .markdown-preview[data-use-github-style] blockquote > :last-child { margin-bottom: 0px; }
+.markdown-preview table, .markdown-preview[data-use-github-style] table { display: block; width: 100%; overflow: auto; word-break: normal; }
+.markdown-preview table th, .markdown-preview[data-use-github-style] table th { font-weight: bold; }
+.markdown-preview table th, .markdown-preview[data-use-github-style] table th, .markdown-preview table td, .markdown-preview[data-use-github-style] table td { padding: 6px 13px; border: 1px solid rgb(221, 221, 221); }
+.markdown-preview table tr, .markdown-preview[data-use-github-style] table tr { border-top-width: 1px; border-top-style: solid; border-top-color: rgb(204, 204, 204); background-color: rgb(255, 255, 255); }
+.markdown-preview table tr:nth-child(2n), .markdown-preview[data-use-github-style] table tr:nth-child(2n) { background-color: rgb(248, 248, 248); }
+.markdown-preview img, .markdown-preview[data-use-github-style] img { max-width: 100%; box-sizing: border-box; }
+.markdown-preview .emoji, .markdown-preview[data-use-github-style] .emoji { max-width: none; }
+.markdown-preview span.frame, .markdown-preview[data-use-github-style] span.frame { display: block; overflow: hidden; }
+.markdown-preview span.frame > span, .markdown-preview[data-use-github-style] span.frame > span { display: block; float: left; width: auto; padding: 7px; margin: 13px 0px 0px; overflow: hidden; border: 1px solid rgb(221, 221, 221); }
+.markdown-preview span.frame span img, .markdown-preview[data-use-github-style] span.frame span img { display: block; float: left; }
+.markdown-preview span.frame span span, .markdown-preview[data-use-github-style] span.frame span span { display: block; padding: 5px 0px 0px; clear: both; color: rgb(51, 51, 51); }
+.markdown-preview span.align-center, .markdown-preview[data-use-github-style] span.align-center { display: block; overflow: hidden; clear: both; }
+.markdown-preview span.align-center > span, .markdown-preview[data-use-github-style] span.align-center > span { display: block; margin: 13px auto 0px; overflow: hidden; text-align: center; }
+.markdown-preview span.align-center span img, .markdown-preview[data-use-github-style] span.align-center span img { margin: 0px auto; text-align: center; }
+.markdown-preview span.align-right, .markdown-preview[data-use-github-style] span.align-right { display: block; overflow: hidden; clear: both; }
+.markdown-preview span.align-right > span, .markdown-preview[data-use-github-style] span.align-right > span { display: block; margin: 13px 0px 0px; overflow: hidden; text-align: right; }
+.markdown-preview span.align-right span img, .markdown-preview[data-use-github-style] span.align-right span img { margin: 0px; text-align: right; }
+.markdown-preview span.float-left, .markdown-preview[data-use-github-style] span.float-left { display: block; float: left; margin-right: 13px; overflow: hidden; }
+.markdown-preview span.float-left span, .markdown-preview[data-use-github-style] span.float-left span { margin: 13px 0px 0px; }
+.markdown-preview span.float-right, .markdown-preview[data-use-github-style] span.float-right { display: block; float: right; margin-left: 13px; overflow: hidden; }
+.markdown-preview span.float-right > span, .markdown-preview[data-use-github-style] span.float-right > span { display: block; margin: 13px auto 0px; overflow: hidden; text-align: right; }
+.markdown-preview code, .markdown-preview[data-use-github-style] code, .markdown-preview tt, .markdown-preview[data-use-github-style] tt { padding: 0.2em 0px; margin: 0px; font-size: 85%; border-radius: 3px; background-color: rgba(0, 0, 0, 0.0392157); }
+.markdown-preview code::before, .markdown-preview[data-use-github-style] code::before, .markdown-preview tt::before, .markdown-preview[data-use-github-style] tt::before, .markdown-preview code::after, .markdown-preview[data-use-github-style] code::after, .markdown-preview tt::after, .markdown-preview[data-use-github-style] tt::after { letter-spacing: -0.2em; content: ' '; }
+.markdown-preview code br, .markdown-preview[data-use-github-style] code br, .markdown-preview tt br, .markdown-preview[data-use-github-style] tt br { display: none; }
+.markdown-preview del code, .markdown-preview[data-use-github-style] del code { text-decoration: inherit; }
+.markdown-preview pre > code, .markdown-preview[data-use-github-style] pre > code { padding: 0px; margin: 0px; font-size: 100%; word-break: normal; white-space: pre; border: 0px; background: transparent; }
+.markdown-preview .highlight, .markdown-preview[data-use-github-style] .highlight { margin-bottom: 16px; }
+.markdown-preview .highlight pre, .markdown-preview[data-use-github-style] .highlight pre, .markdown-preview pre, .markdown-preview[data-use-github-style] pre { padding: 16px; overflow: auto; font-size: 85%; line-height: 1.45; border-radius: 3px; background-color: rgb(247, 247, 247); }
+.markdown-preview .highlight pre, .markdown-preview[data-use-github-style] .highlight pre { margin-bottom: 0px; word-break: normal; }
+.markdown-preview pre, .markdown-preview[data-use-github-style] pre { word-wrap: normal; }
+.markdown-preview pre code, .markdown-preview[data-use-github-style] pre code, .markdown-preview pre tt, .markdown-preview[data-use-github-style] pre tt { display: inline; max-width: initial; padding: 0px; margin: 0px; overflow: initial; line-height: inherit; word-wrap: normal; border: 0px; background-color: transparent; }
+.markdown-preview pre code::before, .markdown-preview[data-use-github-style] pre code::before, .markdown-preview pre tt::before, .markdown-preview[data-use-github-style] pre tt::before, .markdown-preview pre code::after, .markdown-preview[data-use-github-style] pre code::after, .markdown-preview pre tt::after, .markdown-preview[data-use-github-style] pre tt::after { content: normal; }
+.markdown-preview kbd, .markdown-preview[data-use-github-style] kbd { display: inline-block; padding: 3px 5px; font-size: 11px; line-height: 10px; color: rgb(85, 85, 85); vertical-align: middle; border-style: solid; border-width: 1px; border-color: rgb(204, 204, 204) rgb(204, 204, 204) rgb(187, 187, 187); border-radius: 3px; box-shadow: rgb(187, 187, 187) 0px -1px 0px inset; background-color: rgb(252, 252, 252); }
+.markdown-preview, .markdown-preview[data-use-github-style], .markdown-preview code, .markdown-preview[data-use-github-style] code { color: rgb(51, 51, 51); }
+.markdown-preview h1, .markdown-preview[data-use-github-style] h1, .markdown-preview h2, .markdown-preview[data-use-github-style] h2, .markdown-preview h3, .markdown-preview[data-use-github-style] h3, .markdown-preview h4, .markdown-preview[data-use-github-style] h4, .markdown-preview h5, .markdown-preview[data-use-github-style] h5, .markdown-preview h6, .markdown-preview[data-use-github-style] h6 { -webkit-font-smoothing: antialiased; cursor: text; }
+.markdown-preview > h1:first-child, .markdown-preview[data-use-github-style] > h1:first-child, .markdown-preview > h1:first-child + h2, .markdown-preview[data-use-github-style] > h1:first-child + h2, .markdown-preview > h2:first-child, .markdown-preview[data-use-github-style] > h2:first-child, .markdown-preview > h3:first-child, .markdown-preview[data-use-github-style] > h3:first-child, .markdown-preview > h4:first-child, .markdown-preview[data-use-github-style] > h4:first-child, .markdown-preview > h5:first-child, .markdown-preview[data-use-github-style] > h5:first-child, .markdown-preview > h6:first-child, .markdown-preview[data-use-github-style] > h6:first-child { margin-top: 0px; padding-top: 0px; }
+.markdown-preview a, .markdown-preview[data-use-github-style] a, .markdown-preview a code, .markdown-preview[data-use-github-style] a code { color: rgb(65, 131, 196); }
+.markdown-preview a:first-child h1, .markdown-preview[data-use-github-style] a:first-child h1, .markdown-preview a:first-child h2, .markdown-preview[data-use-github-style] a:first-child h2, .markdown-preview a:first-child h3, .markdown-preview[data-use-github-style] a:first-child h3, .markdown-preview a:first-child h4, .markdown-preview[data-use-github-style] a:first-child h4, .markdown-preview a:first-child h5, .markdown-preview[data-use-github-style] a:first-child h5, .markdown-preview a:first-child h6, .markdown-preview[data-use-github-style] a:first-child h6 { margin-top: 0px; padding-top: 0px; }
+.markdown-preview h1 + p, .markdown-preview[data-use-github-style] h1 + p, .markdown-preview h2 + p, .markdown-preview[data-use-github-style] h2 + p, .markdown-preview h3 + p, .markdown-preview[data-use-github-style] h3 + p, .markdown-preview h4 + p, .markdown-preview[data-use-github-style] h4 + p, .markdown-preview h5 + p, .markdown-preview[data-use-github-style] h5 + p, .markdown-preview h6 + p, .markdown-preview[data-use-github-style] h6 + p { margin-top: 0px; }
+.markdown-preview li p.first, .markdown-preview[data-use-github-style] li p.first { display: inline-block; }
+.markdown-preview ul li > :first-child, .markdown-preview[data-use-github-style] ul li > :first-child, .markdown-preview ol li > :first-child, .markdown-preview[data-use-github-style] ol li > :first-child, .markdown-preview ul li ul:first-of-type, .markdown-preview[data-use-github-style] ul li ul:first-of-type, .markdown-preview ol li ul:first-of-type, .markdown-preview[data-use-github-style] ol li ul:first-of-type { margin-top: 0px; }
+.markdown-preview ol > li, .markdown-preview[data-use-github-style] ol > li { list-style-type: decimal; }
+.markdown-preview ul > li, .markdown-preview[data-use-github-style] ul > li { list-style-type: disc; }
+.markdown-preview dl dt:first-child, .markdown-preview[data-use-github-style] dl dt:first-child { padding: 0px; }
+.markdown-preview dl dt > :first-child, .markdown-preview[data-use-github-style] dl dt > :first-child { margin-top: 0px; }
+.markdown-preview dl dt > :last-child, .markdown-preview[data-use-github-style] dl dt > :last-child { margin-bottom: 0px; }
+.markdown-preview dl dd > :first-child, .markdown-preview[data-use-github-style] dl dd > :first-child { margin-top: 0px; }
+.markdown-preview dl dd > :last-child, .markdown-preview[data-use-github-style] dl dd > :last-child { margin-bottom: 0px; }
+.markdown-preview blockquote p, .markdown-preview[data-use-github-style] blockquote p { font-size: 16px; line-height: 1.5; }
+.markdown-preview pre.editor-colors, .markdown-preview[data-use-github-style] pre.editor-colors { padding: 16px; overflow: auto; font-size: 84%; line-height: 1.45; border-radius: 3px; background-color: rgb(29, 31, 33); }
+.markdown-preview pre.editor-colors, .markdown-preview[data-use-github-style] pre.editor-colors { margin-bottom: 16px; word-break: normal; }
+.markdown-preview code, .markdown-preview[data-use-github-style] code, .markdown-preview tt, .markdown-preview[data-use-github-style] tt, .markdown-preview pre.editor-colors, .markdown-preview[data-use-github-style] pre.editor-colors { font-family: Consolas, 'Liberation Mono', Courier, monospace; }
+.markdown-preview .emoji, .markdown-preview[data-use-github-style] .emoji { height: 20px; width: 20px; }
+.markdown-preview code { text-shadow: none; }
+.bracket-matcher .region {
+  border-bottom: 1px dotted lime;
+  position: absolute;
+}
+
+pre.editor-colors,
+.host {
+  background-color: #1d1f21;
+  color: #c5c8c6;
+}
+pre.editor-colors .invisible-character,
+.host .invisible-character {
+  color: rgba(197, 200, 198, 0.2);
+}
+pre.editor-colors .indent-guide,
+.host .indent-guide {
+  color: rgba(197, 200, 198, 0.2);
+}
+pre.editor-colors .wrap-guide,
+.host .wrap-guide {
+  background-color: rgba(197, 200, 198, 0.1);
+}
+pre.editor-colors .gutter,
+.host .gutter {
+  background-color: #292c2f;
+}
+pre.editor-colors .gutter .cursor-line,
+.host .gutter .cursor-line {
+  background-color: rgba(255, 255, 255, 0.14);
+}
+pre.editor-colors .line-number.cursor-line-no-selection,
+.host .line-number.cursor-line-no-selection {
+  background-color: rgba(255, 255, 255, 0.14);
+}
+pre.editor-colors .gutter .line-number.folded,
+.host .gutter .line-number.folded,
+pre.editor-colors .gutter .line-number:after,
+.host .gutter .line-number:after,
+pre.editor-colors .fold-marker:after,
+.host .fold-marker:after {
+  color: #fba0e3;
+}
+pre.editor-colors .invisible,
+.host .invisible {
+  color: #c5c8c6;
+}
+pre.editor-colors .cursor,
+.host .cursor {
+  border-color: #ffffff;
+}
+pre.editor-colors .selection .region,
+.host .selection .region {
+  background-color: #444444;
+}
+pre.editor-colors .source.gfm,
+.host .source.gfm {
+  color: #999;
+}
+pre.editor-colors .gfm .markup.heading,
+.host .gfm .markup.heading {
+  color: #eee;
+}
+pre.editor-colors .gfm .link,
+.host .gfm .link {
+  color: #555;
+}
+pre.editor-colors .gfm .variable.list,
+.host .gfm .variable.list,
+pre.editor-colors .gfm .support.quote,
+.host .gfm .support.quote {
+  color: #555;
+}
+pre.editor-colors .gfm .link .entity,
+.host .gfm .link .entity {
+  color: #ddd;
+}
+pre.editor-colors .gfm .raw,
+.host .gfm .raw {
+  color: #aaa;
+}
+pre.editor-colors .markdown .paragraph,
+.host .markdown .paragraph {
+  color: #999;
+}
+pre.editor-colors .markdown .heading,
+.host .markdown .heading {
+  color: #eee;
+}
+pre.editor-colors .markdown .raw,
+.host .markdown .raw {
+  color: #aaa;
+}
+pre.editor-colors .markdown .link,
+.host .markdown .link {
+  color: #555;
+}
+pre.editor-colors .markdown .link .string,
+.host .markdown .link .string {
+  color: #555;
+}
+pre.editor-colors .markdown .link .string.title,
+.host .markdown .link .string.title {
+  color: #ddd;
+}
+.bracket-matcher .region {
+  border-bottom: 1px solid #f8de7e;
+  margin-top: -1px;
+  opacity: .7;
+}
+.comment {
+  color: #7C7C7C;
+}
+.entity {
+  color: #FFD2A7;
+}
+.entity.name.type {
+  text-decoration: underline;
+  color: #FFFFB6;
+}
+.entity.other.inherited-class {
+  color: #9B5C2E;
+}
+.keyword {
+  color: #96CBFE;
+}
+.keyword.control {
+  color: #96CBFE;
+}
+.keyword.operator {
+  color: #EDEDED;
+}
+.storage {
+  color: #CFCB90;
+}
+.storage.modifier {
+  color: #96CBFE;
+}
+.constant {
+  color: #99CC99;
+}
+.constant.numeric {
+  color: #FF73FD;
+}
+.variable {
+  color: #C6C5FE;
+}
+.invalid.deprecated {
+  text-decoration: underline;
+  color: #FD5FF1;
+}
+.invalid.illegal {
+  color: #FD5FF1;
+  background-color: rgba(86, 45, 86, 0.75);
+}
+.string .source,
+.string .meta.embedded.line {
+  color: #EDEDED;
+}
+.string .punctuation.section.embedded {
+  color: #00A0A0;
+}
+.string .punctuation.section.embedded .source {
+  color: #00A0A0;
+}
+.string {
+  color: #A8FF60;
+}
+.string .constant {
+  color: #00A0A0;
+}
+.string.regexp {
+  color: #E9C062;
+}
+.string.regexp .constant.character.escape,
+.string.regexp .source.ruby.embedded,
+.string.regexp .string.regexp.arbitrary-repetition {
+  color: #FF8000;
+}
+.string.regexp.group {
+  color: #C6A24F;
+  background-color: rgba(255, 255, 255, 0.06);
+}
+.string.regexp.character-class {
+  color: #B18A3D;
+}
+.string .variable {
+  color: #8A9A95;
+}
+.support {
+  color: #FFFFB6;
+}
+.support.function {
+  color: #DAD085;
+}
+.support.constant {
+  color: #FFD2A7;
+}
+.support.type.property-name.css {
+  color: #EDEDED;
+}
+.source .entity.name.tag,
+.source .punctuation.tag {
+  color: #96CBFE;
+}
+.source .entity.other.attribute-name {
+  color: #C6C5FE;
+}
+.entity.other.attribute-name {
+  color: #C6C5FE;
+}
+.entity.name.tag.namespace,
+.entity.other.attribute-name.namespace {
+  color: #E18964;
+}
+.meta.preprocessor.c {
+  color: #8996A8;
+}
+.meta.preprocessor.c .keyword {
+  color: #AFC4DB;
+}
+.meta.cast {
+  color: #676767;
+}
+.meta.sgml.html .meta.doctype,
+.meta.sgml.html .meta.doctype .entity,
+.meta.sgml.html .meta.doctype .string,
+.meta.xml-processing,
+.meta.xml-processing .entity,
+.meta.xml-processing .string {
+  color: #494949;
+}
+.meta.tag .entity,
+.meta.tag > .punctuation,
+.meta.tag.inline .entity {
+  color: #C6C5FE;
+}
+.meta.tag .name,
+.meta.tag.inline .name,
+.meta.tag > .punctuation {
+  color: #96CBFE;
+}
+.meta.selector.css .entity.name.tag {
+  text-decoration: underline;
+  color: #96CBFE;
+}
+.meta.selector.css .entity.other.attribute-name.tag.pseudo-class {
+  color: #8F9D6A;
+}
+.meta.selector.css .entity.other.attribute-name.id {
+  color: #8B98AB;
+}
+.meta.selector.css .entity.other.attribute-name.class {
+  color: #62B1FE;
+}
+.meta.property-group .support.constant.property-value.css,
+.meta.property-value .support.constant.property-value.css {
+  color: #F9EE98;
+}
+.meta.preprocessor.at-rule .keyword.control.at-rule {
+  color: #8693A5;
+}
+.meta.property-value .support.constant.named-color.css,
+.meta.property-value .constant {
+  color: #87C38A;
+}
+.meta.constructor.argument.css {
+  color: #8F9D6A;
+}
+.meta.diff,
+.meta.diff.header {
+  color: #F8F8F8;
+  background-color: #0E2231;
+}
+.meta.separator {
+  color: #60A633;
+  background-color: #242424;
+}
+.meta.line.entry.logfile,
+.meta.line.exit.logfile {
+  background-color: rgba(238, 238, 238, 0.16);
+}
+.meta.line.error.logfile {
+  background-color: #751012;
+}
+</style>
+  </head>
+  <body class='markdown-preview'><h1 id="ia-relat-rio-final-do-trabalho-sobre-m-todos-de-busca-gomoku">IA - Relatório Final do Trabalho sobre Métodos de Busca - Gomoku</h1>
+<ul>
+<li>Aluno: Quenio Cesar Machado dos Santos</li>
+<li>Matrícula: 14100868</li>
+<li>Semestre: 2015-2</li>
+</ul>
+<h2 id="objetivo">Objetivo</h2>
+<p>Implementação do jogo Gomoku usando:</p>
+<ul>
+<li>o algoritmo de busca MinMax com podas;</li>
+<li>uma estrutura de dados e de busca adequada;</li>
+<li>uma heurística/utilidade compatível com o MinMax (implementada matematicamente);</li>
+<li>algumas otimizações (as mesmas não podem substituir o MinMax).</li>
+</ul>
+<h2 id="papel-das-classes">Papel das Classes</h2>
+<p>O jogo foi implementado em C++ usando classes. A classe principal, <code>Game</code>, controla a execução do jogo alternando as jogadas entre os jogadores. Ela também define o nível de dificuldade do jogo, ou seja, a profundidade da busca MinMax.</p>
+<p>O estado do jogo é mantido pela classe <code>GameBoard</code>. Cada momento do jogo é representado por sua própria instância de <code>GameBoard</code>. Esta classe provê uma série de métodos que permitem aos jogadores marcar uma posição no tabuleiro e também consultar qual é o estado atual do tabuleiro, tais como, quais posições ainda estão disponíveis para serem jogadas. A classe <code>GameSlot</code> mantém o estado de cada posição no tabuleiro. Juntamente com as classes <code>GamePosition</code> - que representa as coordenadas de uma posição no tabuleiro - e <code>GameArea</code> - que delimita uma área do tabuleiro, <code>GameSlot</code> auxilia GameBoard nas sua funções.</p>
+<p>Os jogadores são representados pela classe abstrata <code>Player</code>, que possui duas sub-classes concretas: <code>AIPlayer</code> - que representa o computador jogando - e <code>HumanPlayer</code> - que presenta o usuário do jogo. <code>HumanPlayer</code> apenas provê um &quot;prompt&quot; para que o usuário possa informar a posição da sua próxima jogada. <code>AIPlayer</code> depende da classe <code>GameTree</code> para determinar a melhor jogada do computador.</p>
+<p>A classe <code>GameTree</code> implementa o algoritmo MinMax, determinando assim a melhor jogada para o computador. Ela depende da classe <code>GameNode</code> para descobrir quais são as próximas jogadas possíveis e também para saber a pontuação de um determinado estado do tabuleiro. <code>GameNode</code> implementa as funções de utilidade e de heurística, utilizando-se da classes <code>GameBoard</code> e <code>GamePosition</code> para avaliar o estado do tabuleiro.</p>
+<p>Além das classes acima, as seguintes tipos de enumeração tem papéis importantes na implementação:</p>
+<ul>
+<li><code>PlayerMaker</code> tem dois valores possíveis: <code>X</code> - que é o marcador de posição do tabuleiro usado pelo computador; e <code>O</code> - que é o marcador usado pelo usuário do jogo. Estes marcadores são usados para determinar se uma posição marcada ou jogada é do computador ou do usuário.</li>
+<li><code>Direction</code> tem como valores os pontos cardeiais e permite definir a direção em que se percorre as posições do tabuleiro. É usada na função de heurística e para determinar uma sequência de vitória.</li>
+<li><code>PlayerSkill</code> guarda implicitamente a profundidade da busca MinMax, que corresponde à habilidade do computador.</li>
+</ul>
+<p>O tipo <code>Score</code> - que é simplemente um apelido de <code>long</code> na imlementação atual - guarda as pontuações calculadas pelas funções de utilidade e heurística. Também é utilizado na implementação do MinMax.</p>
+<h2 id="m-todos-principais">Métodos Principais</h2>
+<p>As classes descritas acima possuem alguns métodos chave que orientam a execução do jogo:</p>
+<ul>
+<li><code>void Game::start()</code> inicia o jogo e executa o &quot;loop&quot; que alterna entre as jogadas entre os jogadores.</li>
+<li><code>GameBoard Player::play(gameBoard)</code> executa uma jogada de um dos jogadores. É um método polimórfico com implementação nas sub-classes <code>AIPlayer</code> e <code>HumanPlayer</code>, de acordo com sua funções. Ele recebe o estado atual do tabuleiro em uma instância de <code>GameBoard</code> e retorna o novo estado do jogo em uma nova instância de <code>GameBoard</code> que já contém a nova jogada.</li>
+<li><code>GamePosition GameTree::bestPositionFor(playerMarker)</code> é executada por <code>AIPLayer</code> para descobrir qual é a melhor jogada baseada no estado atual do tabuleiro. Este método implementa o primeiro nível &quot;max&quot; do algoritmo MinMax, guardando a posição a ser jogada cada vez que encontra um valor máximo.</li>
+<li><code>Score GameTree::minMax(gameNode, playerMarker, alpha, beta)</code> implementa o algoritmo MinMax com podas alpha-beta. Também retorna o <code>Score</code> de um nó quando atinge uma folha da árvore do jogo. É chamado pelo método <code>bestPositionFor()</code> descrito acima.</li>
+<li><code>vector&lt;GameNode&gt; GameNode::childrenFor(playerMarker, focus)</code> retorna os nós-filho de um nó. Cada instância de <code>GameNode</code> contém a posição da jogada feita pelo nó e a instância de <code>GameBoard</code> com estado gerado por aquela jogada. É este método que determina a amplitude da árvore de busca.</li>
+<li><code>Score GameNode::scoreFor(playerMarker)</code> é a função que retornará o valor de utilidade do tabuleiro associado ao nó, caso o tabuleiro seja terminal (tenha uma vitória ou um empate); ou o valor da função de heurística, se o tabuleiro associado ao nó é não-terminal.</li>
+<li><code>Score GameNode::utilityScore()</code> retornará o <code>Score</code> máximo se o computador for o ganhador e o <code>Score</code> mínimo se o ganhador for o usuário; e zero, se for um empate. Também leva em conta o nível do nó, para que vitórias do computador nos níveis superiores sejam mais valiosas que aquelas num nível inferior (para ganhar mais rápido); e derrotas ou empates valham mais nos níveis inferiores (perder ou empatar mais tarde).</li>
+<li><code>Score GameNode::heuristicScore(playerMarker)</code> é a função de heurística. O algortimo de heurística será descrito numa seção abaixo.</li>
+</ul>
+<h2 id="estruturas-de-dados">Estruturas de Dados</h2>
+<p>As estruturas de dados usadas na implementação são:</p>
+<ul>
+<li><em>Array bi-dimensinonal</em>: a classe <code>GameBoard</code> armazena o estado de um tabuleiro num array bi-dimensional, onde a primeira dimensão representa uma linha do tabuleiro e a segunda dimensão representa uma coluna. Na interseção de uma linha e uma coluna se encontra uma instância de <code>GameSlot</code>, que contém o estado de uma única célula do tabuleiro.</li>
+<li><code>vector&lt;GameNode&gt;</code>: a classe <code>vector</code>, da biblioteca padrão do C++, é usada para percorrer a árvore de busca do MinMax. Ela contém uma lista de instâncias de <code>GameNode</code>, que representam as jogadas a serem avaliadas a partir do configuração atual do tabuleiro.</li>
+</ul>
+<p>Além das estruturas mais complexas descritas acima, existem algumas classes agregam informações importantes do jogo:</p>
+<ul>
+<li><code>GameSlot</code> armazena o estado de cada célula do tabuleiro: marcada com <code>X</code>, <code>O</code>, ou vazia.</li>
+<li><code>GamePosition</code> armazena a posição de uma célula no tabuleiro, mantendo dois índices, linha e coluna, que tem os valores válidos no intervalo [0, 15].</li>
+<li><code>GameArea</code> armazena as coordenadas que delimitam uma área do tabuleiro. É usada para restringir a amplitude de busca do MinMax.</li>
+</ul>
+<h2 id="fun-o-de-heur-stica">Função de Heurística</h2>
+<p>A função de heurística implementada em <code>GameNode::heuristicScore()</code> analisa o estado de todas as células do tabuleiro para determinar uma pontuação, ou <code>Score</code>. Um valor positivo significa que a configuração apresentada do tabuleiro beneficia o computador, enquanto um valor negativo beneficia o usuário do jogo. O valor zero demonstra que não há vantagem para qualquer jogador naquela configuração. Desta forma, o algoritmo do MinMax poderá aplicar as funções de maximização ou minimização em cada nível da busca para determinar a melhor jogada.</p>
+<p>A análise é feita em todas as direções do tabuleiro - usando os pontos cardeiais como referência, procurando por sequências relevantes dos marcadores do computador e do usuário. Para cada sequência relevante é dada uma pontuação e, ao final, o somatório de todas as pontuações é retornado como a pontuação do tabuleiro como um todo.</p>
+<p>A pontuação de cada sequência relevante é baseada nas táticas do jogo. Em valores absolutos, quanto maior a pontuação de uma sequência, mais valiosa esta será do ponto de vista tático. As sequências táticas são descritas abaixo da mais valiosa para a menos valiosa:</p>
+<ul>
+<li><em>Quatro abertos</em>, ou seja, quatro marcadores do mesmo tipo em sequência, com as duas pontas da sequência abertas, garante a vitória para o jogador daquele marcador em sua próxima jogada, pois o adversário não poderá bloquear ambas as pontas da sequência, assim permitindo ao jogador completar uma sequência de cinco marcadores e ganhar o jogo.</li>
+<li><em>Três abertos</em> é similar a sequência de <em>quatro abertos</em>, porém tem somente três marcadores em sequência. Ela é menos valiosa por isto, mas assim é bem valiosa pois o jogador deste marcador está potencialmente prestes a formar uma sequência de <em>quatro abertos</em>. Outra forma de <em>três abertos</em> acontece quando existe uma posição vazia entre uma sequência de dois marcadores e outra posição com o mesmo marcador. Esta situação também dá a possibilidade ao jogador de completar um <em>quatro aberto</em>.</li>
+<li>Sequências de <em>quatro</em> ou <em>três</em> semi-fechadas, ou seja, com apenas uma ponta aberta, são menos valiosas quanto as sequências descritas acima, visto que o adversário pode neutralizá-las. Porém, elas ainda podem resultar em vitórias e tem o poder de forçar o adversário a defender-se, ao invés de atacar.</li>
+<li>Sequências de <em>dois</em> e marcadores &quot;solitários&quot; são significativamente menos valiosos que as sequências acima.</li>
+</ul>
+<p>Para se evitar que o somátorio de um grande número de sequências menos valiosas resulte em uma pontuação maior que um pequeno somatório de sequências mais valiosas, utilizou-se uma função exponencial para definir a pontuação de cada sequência tática. O expoente representa o comprimento da sequência encontrada e a base representa o estado da célula, sendo uma célula marcada mais valiosa que uma célula vazia.</p>
+<h2 id="otimiza-es">Otimizações</h2>
+<p>Visto que a busca do MinMax é cara num tabuleiro 15x15, devido ao tamanho da árvore gerada para todos os estados do jogo, foi necessário implementar algumas otimizações que permitiram diminuir a árvore de busca, tornando o tempo de execução com quatro níveis mais razoável.</p>
+<h3 id="podas-com-alpha-beta">Podas com Alpha &amp; Beta</h3>
+<p>O algoritmo MinMax que mantém valores de alpha e beta para cada nó permite que ramos inteiros da árvore de busca possam ser ignorados, pois estes não poderiam trazer resultados melhores do que já se alcançou com os ramos já pesquisados.</p>
+<p>A implementação melhorou substancialmente o desempenho do MinMax com até três níveis de busca, mas não foi suficiente para melhorar o desempenho da busca de quatro níveis.</p>
+<h3 id="foco-em-reas-do-tabuleiro">Foco em Áreas do Tabuleiro</h3>
+<p>Outra otimização que foi necessária foi diminuir a amplitude da árvore de busca. Para que o número de nós-filho gerados para cada nó-pai fosse significativamente menor, e assim diminuir o tamanho da árvoce de busca, usou-se a classe <code>GameArea</code> para definir uma área menor do tabuleiro onde o computador deveria focar em cada jogada.</p>
+<p>Ao iniciar o jogo, a área de foco é a área central do tabuleiro, pois ainda não exitem células marcadas. Porém, a classe <code>AIPlayer</code> vai continuamente verificando o local da última jogada do adversário e vai ajustando a área de foco para que esteja em volta da última jogada.</p>
+<p>Observou-se que, com uma área de foco 6x6, consegue-se um desempenho razoável do MinMax e ainda assim o computador é capaz de &quot;perceber&quot; as jogadas mais relevantes na maior parte do tempo. Porém, com uma área de foco menor, apesar de um desempenho ainda melhor do MinMax, o computador começa a ter um desempenho tático pior, pois deixa de ver muitas jogadas.</p>
+<p>Com a implementação desta otimização se conseguiu um desempenho bem melhor com quatro níveis de busca.</p>
+<h3 id="ordena-o-dos-n-s-de-busca">Ordenação dos Nós de Busca</h3>
+<p>Ainda outra otimização realizada foi a ordenação dos nós-filho de tal forma que as jogadas que estão mais perto da última jogada do adversário sejam avaliadas primeiro.</p>
+<p>Esta otimização permitiu ao MinMax avaliar as podas a partir das jogadas mais relevantes e assim acelerou o processo de poda.</p>
+<h2 id="problemas-encontrados">Problemas Encontrados</h2>
+<p>Abaixo estão alguns das dificuldades encontradas durante a implementação do Gomoku:</p>
+<ul>
+<li><em>Táticas e estratégias</em>: Antes de implementar a função de heurística foi necessário entender bem como o jogo funciona e pesquisar sobre as táticas e estratégias do jogo. Assim mesmo, foi necessário ainda jogar o jogo inúmeras vezes para entender as diferentes situações, o valor relativo de cada uma, e as combinações possíveis de jogada.</li>
+<li><em>Implementação da função de heurística</em>: Mesmo depois da pesquisa inicial e da melhor compressão das táticas e estratégias do jogo, ainda foi necessário muito tempo elaborando o esquema de pontuação. Na implementação inicial, o algoritmo estava avaliando somente as células em torno da jogada a ser realizada. Esta abordagem funcionou bem apenas com um nível de busca, mas simplesmente não funcionou com dois ou mais níveis. Isto se deu porque a base de referência do tabuleiro variava muito entre as avaliações de cada nó da árvore de busca, dado que cada avaliação se dava num conjunto de células diferentes. Após o algoritmo de heurística ser modificado para avaliar todas as células do tabuleiro (e depois de várias iterações de ajuste do algoritmo), o desempenho começou a melhorar na medida em que o número de níveis da busca foi aumentando.</li>
+<li><em>Verificação de casos de teste</em>: Outra dificuldade da implementação foi a necessidade de repetir várias vezes os casos de teste toda vez que uma alteração era feita na função de heurística. Algumas alterações eram boas para um caso, mas &quot;quebravam&quot; outros casos. Portanto, este trabalho de ajuste exigiu muito tempo. A automação da execução dos casos de teste teria acelerado este processo.</li>
+<li><em>Implementação das otimizações</em>: A implementação das otimizações também exigiu tempo devido a necessidade de comparar o desempenho antes e depois da otimização. Foi necessário também refatorar o código do MinMax para implementar podas alpha-beta, o que exigiu mais tempo para testar as mudanças e certificar-se que o MinMax estava funcionando adequedamente.</li>
+</ul>
+<h2 id="limita-es">Limitações</h2>
+<p>A grande limitação da implementação é o baixo desempenho na busca de 5 níveis ou mais. Para funcionar adequedamente com 5 níveis é necessário uma área de foco de tamanho mínimo, o que compremete enormemente a habilidade do computador.</p>
+<h2 id="conclus-es">Conclusões</h2>
+<p>O algoritmo MinMax funciona adequedamente para o jogo Gomoku, porém seu desempenho deixou a desejar. Mesmo com o uso de podas e outras otimizações, não foi possível atingir um desempenho adequado acima de 4 níveis de procura. Seria interessante pesquisar sobre outras formas de poda - e outras otimizações possíveis - para melhorar o desempenho do MinMax e permitir mais níveis de procura. Talvez, otimizações nos métodos auxiliares e nas estruturas de dados pudessem trazer alguma melhoria no desempenho.</p>
+<p>Também vale salientar que a implementação adequedada do algoritmo da heurística é fundamental para o sucesso da implementação. É necessário avaliar todo o estado do tabuleiro para que o MinMax funcione corretamente. Na área da função de heurística seria interessante também pesquisar mais sobre possíveis técnicas para a elaboração de um algortimo adequado. Ao menos, seria útil estabelecer boas práticas para que se possa ser mais eficiente na implementação da função de heurística.</p>
+<p>Apesar das dificuldades encontradas, foi muito gratificamente ver o computador jogando bem; até melhor que o usuário. Foi muito interessante observar na prática que o programador pode &quot;ensinar&quot; o computador a jogar e ainda se surpreender com a habilidade superior do computador numa partida contra o programador. Esta experiência gera questões interessantes sobre o impacto da inteligência artificial nos próximos anos à medida em que as habilidades dos programas avançam e abrangem cada vez mais as diferentes áreas de habilidade humana.</p></body>
+</html>
