@@ -33,7 +33,13 @@ bool operator == (Player & lhs, Player & rhs)
     return lhs._marker == rhs._marker;
 }
 
-enum PlayerSkill { Novice = 1, Medium = 2, Expert = 3, Master = 4 };
+enum PlayerSkill
+{
+    Novice = 1, // two levels on search - first level has index one
+    Medium = 2, // three levels
+    Expert = 3, // four levels
+    Master = 4  // five levels
+};
 
 class AIPlayer: public Player
 {
