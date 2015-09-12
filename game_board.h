@@ -260,7 +260,7 @@ private:
     }
 
     GameSlot _slots[LINE_COUNT][COLUMN_COUNT];
-    GamePosition _lastPlayedPosition;
+    GamePosition _lastPlayedPosition { CENTER };
 
 };
 
