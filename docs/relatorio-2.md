@@ -74,7 +74,7 @@ Visto que a busca do MinMax é cara num tabuleiro 15x15, devido ao tamanho da á
 
 O algoritmo MinMax que mantém valores de alpha e beta para cada nó permite que ramos inteiros da árvore de busca possam ser ignorados, pois estes não poderiam trazer resultados melhores do que já se alcançou com os ramos já pesquisados.
 
-A implementação melhorou substancialmente o desempenho do MinMax com três, e até quatro, níveis de busca, mas não foi suficiente para melhorar o desempenho da busca de cinco níveis.
+A implementação melhorou substancialmente o desempenho do MinMax com até três níveis de busca, mas não foi suficiente para melhorar o desempenho da busca de quatro níveis.
 
 ### Foco em Áreas do Tabuleiro
 
@@ -84,7 +84,7 @@ Ao iniciar o jogo, a área de foco é a área central do tabuleiro, pois ainda n
 
 Observou-se que, com uma área de foco 6x6, consegue-se um desempenho razoável do MinMax e ainda assim o computador é capaz de "perceber" as jogadas mais relevantes na maior parte do tempo. Porém, com uma área de foco menor, apesar de um desempenho ainda melhor do MinMax, o computador começa a ter um desempenho tático pior, pois deixa de ver muitas jogadas.
 
-Com a implementação desta otimização se conseguiu um desempenho mais razoável com cinco níveis de busca.
+Com a implementação desta otimização se conseguiu um desempenho bem melhor com quatro níveis de busca.
 
 ### Ordenação dos Nós de Busca
 
@@ -102,11 +102,11 @@ Abaixo estão alguns das dificuldades encontradas durante a implementação do G
 
 ## Limitações
 
-A grande limitação da implementação é o baixo desempenho na busca de 6 níveis ou mais. Para funcionar adequedamente com 6 níveis é necessário uma área de foco de tamanho mínimo, o que compremete enormemente a habilidade do computador.
+A grande limitação da implementação é o baixo desempenho na busca de 5 níveis ou mais. Para funcionar adequedamente com 5 níveis é necessário uma área de foco de tamanho mínimo, o que compremete enormemente a habilidade do computador.
 
 ## Conclusões
 
-O algoritmo MinMax funciona adequedamente para o jogo Gomoku, porém seu desempenho deixou a desejar. Mesmo com o uso de podas e outras otimizações, não foi possível atingir um desempenho adequado acima de 5 níveis de procura. Seria interessante pesquisar sobre outras formas de poda - e outras otimizações possíveis - para melhorar o desempenho do MinMax e permitir mais níveis de procura. Talvez, otimizações nos métodos auxiliares e nas estruturas de dados pudessem trazer alguma melhoria no desempenho.
+O algoritmo MinMax funciona adequedamente para o jogo Gomoku, porém seu desempenho deixou a desejar. Mesmo com o uso de podas e outras otimizações, não foi possível atingir um desempenho adequado acima de 4 níveis de procura. Seria interessante pesquisar sobre outras formas de poda - e outras otimizações possíveis - para melhorar o desempenho do MinMax e permitir mais níveis de procura. Talvez, otimizações nos métodos auxiliares e nas estruturas de dados pudessem trazer alguma melhoria no desempenho.
 
 Também vale salientar que a implementação adquedada do algoritmo da heurística é fundamental para o sucesso da implementação. É necessário avaliar todo o estado do tabuleiro para que o MinMax funcione corretamente. Na área da função de heurística seria interessante também pesquisar mais sobre possíveis técnicas para a elaboração de um algortimo adequado. Ao menos, seria útil estabelecer boas práticas para que se possa ser mais eficiente na implementação da função de heurística.
 
