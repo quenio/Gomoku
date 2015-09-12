@@ -25,6 +25,7 @@ A classe `GameTree` implementa o algoritmo MinMax, determinando assim a melhor j
 Além das classes acima, as seguintes tipos de enumeração tem papéis importantes na implementação:
 - `PlayerMaker` tem dois valores possíveis: `X` - que é o marcador de posição do tabuleiro usado pelo computador; e `O` - que é o marcador usado pelo usuário do jogo. Estes marcadores são usados para determinar se uma posição marcada ou jogada é do computador ou do usuário.
 - `Direction` tem como valores os pontos cardeiais e permite definir a direção em que se percorre as posições do tabuleiro. É usada na função de heurística e para determinar uma sequência de vitória.
+- `PlayerSkill` guarda implicitamente a profundidade da busca MinMax, que corresponde à habilidade do computador.
 
 O tipo `Score` - que é simplemente um apelido de `long` na imlementação atual - guarda as pontuações calculadas pelas funções de utilidade e heurística. Também é utilizado na implementação do MinMax.
 
@@ -73,7 +74,7 @@ Visto que a busca do MinMax é cara num tabuleiro 15x15, devido ao tamanho da á
 
 O algoritmo MinMax que mantém valores de alpha e beta para cada nó permite que ramos inteiros da árvore de busca possam ser ignorados, pois estes não poderiam trazer resultados melhores do que já se alcançou com os ramos já pesquisados.
 
-A implementação melhorou substancialmente o desempenho do MinMax com dois ou três níveis de busca, mas não foi suficiente para melhorar o desempenho da busca de três níveis.
+A implementação melhorou substancialmente o desempenho do MinMax com três, e até quatro, níveis de busca, mas não foi suficiente para melhorar o desempenho da busca de cinco níveis.
 
 ### Foco em Áreas do Tabuleiro
 
@@ -83,8 +84,30 @@ Ao iniciar o jogo, a área de foco é a área central do tabuleiro, pois ainda n
 
 Observou-se que, com uma área de foco 6x6, consegue-se um desempenho razoável do MinMax e ainda assim o computador é capaz de "perceber" as jogadas mais relevantes na maior parte do tempo. Porém, com uma área de foco menor, apesar de um desempenho ainda melhor do MinMax, o computador começa a ter um desempenho tático pior, pois deixa de ver muitas jogadas.
 
+Com a implementação desta otimização se conseguiu um desempenho mais razoável com cinco níveis de busca.
+
 ### Ordenação dos Nós de Busca
 
 Ainda outra otimização realizada foi a ordenação dos nós-filho de tal forma que as jogadas que estão mais perto da última jogada do adversário sejam avaliadas primeiro.
 
 Esta otimização permitiu ao MinMax avaliar as podas a partir das jogadas mais relevantes e assim acelerou o processo de poda.
+
+## Problemas Encontrados
+
+Abaixo estão alguns das dificuldades encontradas durante a implementação do Gomoku:
+- _Táticas e estratégias_: Antes de implementar a função de heurística foi necessário entender bem como o jogo funciona e pesquisar sobre as táticas e estratégias do jogo. Assim mesmo, foi necessário ainda jogar o jogo inúmeras vezes para entender as diferentes situações, o valor relativo de cada uma, e as combinações possíveis de jogada.
+- _Implementação da função de heurística_: Mesmo depois da pesquisa inicial e da melhor compressão das táticas e estratégias do jogo, ainda foi necessário muito tempo elaborando o esquema de pontuação. Na implementação inicial, o algoritmo estava avaliando somente as células em torno da jogada a ser realizada. Esta abordagem funcionou bem apenas com um nível de busca, mas simplesmente não funcionou com dois ou mais níveis. Isto se deu porque a base de referência do tabuleiro variava muito entre as avaliações de cada nó da árvore de busca, dado que cada avaliação se dava num conjunto de células diferentes. Após o algoritmo de heurística ser modificado para avaliar todas as células do tabuleiro (e depois de várias iterações de ajuste do algoritmo), o desempenho começou a melhorar na medida em que o número de níveis da busca foi aumentando.
+- _Verificação de casos de teste_: Outra dificuldade da implementação foi a necessidade de repetir várias vezes os casos de teste toda vez que uma alteração era feita na função de heurística. Algumas alterações eram boas para um caso, mas "quebravam" outros casos. Portanto, este trabalho de ajuste exigiu muito tempo. A automação da execução dos casos de teste teria acelerado este processo.
+- _Implementação das otimizações_: A implementação das otimizações também exigiu tempo devido a necessidade de comparar o desempenho antes e depois da otimização. Foi necessário também refatorar o código do MinMax para implementar podas alpha-beta, o que exigiu mais tempo para testar as mudanças e certificar-se que o MinMax estava funcionando adequedamente.
+
+## Limitações
+
+A grande limitação da implementação é o baixo desempenho na busca de 6 níveis ou mais. Para funcionar adequedamente com 6 níveis é necessário uma área de foco de tamanho mínimo, o que compremete enormemente a habilidade do computador.
+
+## Conclusões
+
+O algoritmo MinMax funciona adequedamente para o jogo Gomoku, porém seu desempenho deixou a desejar. Mesmo com o uso de podas e outras otimizações, não foi possível atingir um desempenho adequado acima de 5 níveis de procura. Seria interessante pesquisar sobre outras formas de poda - e outras otimizações possíveis - para melhorar o desempenho do MinMax e permitir mais níveis de procura. Talvez, otimizações nos métodos auxiliares e nas estruturas de dados pudessem trazer alguma melhoria no desempenho.
+
+Também vale salientar que a implementação adquedada do algoritmo da heurística é fundamental para o sucesso da implementação. É necessário avaliar todo o estado do tabuleiro para que o MinMax funcione corretamente. Na área da função de heurística seria interessante também pesquisar mais sobre possíveis técnicas para a elaboração de um algortimo adequado. Ao menos, seria útil estabelecer boas práticas para que se possa ser mais eficiente na implementação da função de heurística.
+
+Apesar das dificuldades encontradas, foi muito gratificamente ver o computador jogando bem; até melhor que o usuário. Foi muito interessante observar na prática que o programador pode "ensinar" o computador a jogar e ainda se surpreender com a habilidade superior do computador numa partida contra o programador. Esta experiência gera questões interessantes sobre o impacto da inteligência artificial nos próximos anos à medida em que as habilidades dos programas avançam e abrangem cada vez mais as diferentes áreas de habilidade humana.
