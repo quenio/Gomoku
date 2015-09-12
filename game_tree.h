@@ -14,12 +14,18 @@ public:
 
     GamePosition bestPositionFor(const PlayerMarker & playerMarker)
     {
+        cout << '[';
+        cout.flush();
+
         const auto children = _root.childrenFor(playerMarker, _focus);
         auto bestPosition = children.front().playedPosition();
         Score maxScore = MIN_SCORE;
 
         for (const auto & gameNode : children)
         {
+            cout << '.';
+            cout.flush();
+
             if (DEBUG<TopLevel>::enabled)
             {
                 cout << "GameNode: in: " << gameNode << endl;
@@ -39,6 +45,8 @@ public:
                 cout << " (Score: " << score << "; max: " << maxScore << ")" << endl << endl;
             }
         }
+
+        cout << ']' << endl << endl;
 
         if (DEBUG<TopLevel>::enabled)
         {

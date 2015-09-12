@@ -208,7 +208,7 @@ public:
         if (_gameBoard.markedIn(current, marker))
         {
             markerCount++;
-            score += scoreOf(marker, SINGLE_MARK - current.distanceTo(CENTER), markerCount); // Positions will score higher closer to the center.
+            score += scoreOf(marker, SINGLE_MARK, markerCount);
         }
         else
         {
@@ -336,7 +336,7 @@ public:
         if (_gameBoard.markedIn(current, marker))
         {
             markerCount++;
-            score += scoreOf(marker, SINGLE_MARK - current.distanceTo(CENTER), markerCount); // Positions will score higher closer to the center.
+            score += scoreOf(marker, SINGLE_MARK, markerCount);
         }
         else
         {
